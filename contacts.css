@@ -1,0 +1,32 @@
+body {
+    position: relative;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .greeting {
+    text-align: center;
+    color: bisque;
+    text-shadow: 2px 2px 4px #000000;
+  }
+  
+  .navbar {
+    top: 100px; 
+    align-content: center;
+    word-spacing: 16px;
+  }
+  
+  .navbar ul {
+    list-style-type: none;
+  }
+  
+  
+  .navbar a {
+    text-decoration: none;
+    color: bisque;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px #000000;
+  }
+  
+  

@@ -1,0 +1,150 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #098b94; 
+}
+
+header {
+  background-color: #c8ab9e;
+  border: 4px solid #333;
+  padding: 10px 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+header nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+}
+
+header nav ul li {
+  margin-right: 20px;
+}
+
+header nav ul li a {
+  color: black;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+  color: #098b94;
+}
+
+main {
+  margin-top: 80px; 
+  padding: 20px;
+}
+
+.profile-image-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 4px solid #333;
+}
+
+section {
+  margin-bottom: 40px;
+  padding: 20px;
+  background-color: #c8ab9e;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border: 4px solid #333;
+}
+
+section h1, section h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+section form {
+  max-width: 400px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+section form label {
+  margin-bottom: 10px;
+}
+
+section form input, section form button {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #c8ab9e;
+  border-radius: 4px;
+}
+
+section form button {
+  background-color: #333;
+  color: #c8ab9e;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+section form button:hover {
+  background-color: #098b94;
+}
+
+footer {
+  background-color: #c8ab9e;
+  color: black;
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+  margin-top: 40px;
+}
+
+footer p {
+  margin: 0;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.project-box {
+  padding: 20px;
+  background-color: #bf6166;
+  border: 1px solid black;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.project-box:hover {
+  transform: translateY(-5px);
+}
+
+.project-box h3 {
+  margin-bottom: 10px;
+}
+
+.project-box a {
+  color: #333;
+  text-decoration: none;
+}
+
+.project-box p {
+  color: #666;
+  font-size: 0.9rem;
+}
