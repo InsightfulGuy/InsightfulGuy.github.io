@@ -11,8 +11,8 @@
         <nav class="navbar">
             <ul class="link-group">
                 <li class="link"><a href="home.html">Home</a></li>
-                <li class="link active"><a href="projects.html">Projekte</a></li>
-                <li class="link"><a href="contacts.html">Kontakt</a></li>
+                <li class="link active"><a href="projects.html">Projects</a></li>
+                <li class="link"><a href="contacts.html">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -20,18 +20,55 @@
     <main>
         <section id="project-overview">
             <h1>Projektübersicht</h1>
-            <label for="category-select">Kategorie auswählen:</label>
+            <label for="category-select">Choose category:</label>
             <select id="category-select" onchange="filterProjects()">
-                <option value="all">Alle</option>
+                <option value="all">All</option>
                 <option value="web">Web</option>
                 <option value="mobile">Mobile</option>
                 <option value="data-science">Data Science</option>
             </select>
-            <div id="project-grid" class="project-grid"></div>
-        </section>
-
-        <section id="category-filter">
-            <h1>Kategoriefilter</h1>
+            <section id="project-grid" class="project-grid">
+                <section class="project-box" data-category="web">
+                    <h3><a href="project-detail.html">Project 1</a></h3>
+                    <p>Description of Project 1</p>
+                </section>
+                <section class="project-box" data-category="mobile">
+                    <h3><a href="project-detail.html">Project 2</a></h3>
+                    <p>Description of Project 2</p>
+                </section>
+                <section class="project-box" data-category="data-science">
+                    <h3><a href="project-detail.html">Project 3</a></h3>
+                    <p>Description of Project 3</p>
+                </section>
+                <section class="project-box" data-category="web">
+                    <h3><a href="project-detail.html">Project 4</a></h3>
+                    <p>Description of Project 4</p>
+                </section>
+                <section class="project-box" data-category="mobile">
+                    <h3><a href="project-detail.html">Project 5</a></h3>
+                    <p>Description of Project 5</p>
+                </section>
+                <section class="project-box" data-category="data-science">
+                    <h3><a href="project-detail.html">Project 6</a></h3>
+                    <p>Description of Project 6</p>
+                </section>
+                <section class="project-box" data-category="web">
+                    <h3><a href="project-detail.html">Project 7</a></h3>
+                    <p>Description of Project 7</p>
+                </section>
+                <section class="project-box" data-category="mobile">
+                    <h3><a href="project-detail.html">Project 8</a></h3>
+                    <p>Description of Project 8</p>
+                </section>
+                <section class="project-box" data-category="data-science">
+                    <h3><a href="project-detail.html">Project 9</a></h3>
+                    <p>Description of Project 9</p>
+                </section>
+                <section class="project-box" data-category="web">
+                    <h3><a href="project-detail.html">Project 10</a></h3>
+                    <p>Description of Project 10</p>
+                </section>
+            </section>
         </section>
     </main>
 
@@ -40,56 +77,19 @@
     </footer>
 
     <script>
-        let repos = [];
-
-        async function fetchGitHubRepos() {
-            try {
-                const response = await fetch('https://api.github.com/users/InsightfulGuy/repos');
-                repos = await response.json();
-
-                repos = repos.map(repo => {
-                    const categories = ['web', 'mobile', 'data-science'];
-                    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-                    return { ...repo, category: randomCategory };
-                });
-
-                displayProjects(repos);
-            } catch (error) {
-                console.error('Error fetching GitHub repositories:', error);
-            }
-        }
-
-        function displayProjects(projects) {
-            const projectGrid = document.getElementById('project-grid');
-            projectGrid.innerHTML = '';
-
-            projects.forEach(repo => {
-                const projectBox = document.createElement('div');
-                projectBox.classList.add('project-box');
-                projectBox.setAttribute('data-category', repo.category);
-
-                const projectName = document.createElement('h3');
-                const projectLink = document.createElement('a');
-                projectLink.href = repo.html_url;
-                projectLink.textContent = repo.name;
-                projectName.appendChild(projectLink);
-
-                const projectDescription = document.createElement('p');
-                projectDescription.textContent = repo.description || 'No description available';
-
-                projectBox.appendChild(projectName);
-                projectBox.appendChild(projectDescription);
-                projectGrid.appendChild(projectBox);
+        function filterProjects() {
+            const selectedCategory = document.getElementById('category-select').value;
+            const projectBoxes = document.querySelectorAll('.project-box');
+            projectBoxes.forEach(box => {
+                if (selectedCategory === 'all' || box.getAttribute('data-category') === selectedCategory) {
+                    box.style.display = 'block';
+                } else {
+                    box.style.display = 'none';
+                }
             });
         }
 
-        function filterProjects() {
-            const selectedCategory = document.getElementById('category-select').value;
-            const filteredRepos = selectedCategory === 'all' ? repos : repos.filter(repo => repo.category === selectedCategory);
-            displayProjects(filteredRepos);
-        }
-
-        fetchGitHubRepos();
+        document.addEventListener('DOMContentLoaded', filterProjects);
     </script>
 </body>
 </html>
