@@ -21,7 +21,7 @@
         <section id="project-detail">
             <h1 id="project-name">Project Name</h1>
             <p id="project-description">Project Description</p>
-            <img id="project-image" src="placeholder.jpg" alt="Project Image">
+            <img id="project-image" src="placehold-3129447776.jpg" alt="Project Image">
         </section>
 
         <section id="contact-form">
@@ -51,7 +51,7 @@
             if (project && project.name && project.description) {
                 document.getElementById('project-name').textContent = project.name;
                 document.getElementById('project-description').textContent = project.description;
-                document.getElementById('project-image').src = 'placehold-3129447776.jpg';
+                document.getElementById('project-image').src = '';
             } else {
                 document.getElementById('project-detail').textContent = 'No project selected.';
             }
