@@ -1,61 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project Detail</title>
-    <link rel="stylesheet" href="project-detail.css">
-</head>
-<body>
+    <link rel="stylesheet" href="project-detail.css" />
+  </head>
+  <body>
     <header>
-        <nav class="navbar">
-            <ul class="link-group">
-                <li class="link"><a href="index.html">Home</a></li>
-                <li class="link"><a href="projects.html">Projects</a></li>
-                <li class="link"><a href="contacts.html">Contact</a></li>
-            </ul>
-        </nav>
+      <nav class="navbar">
+        <ul class="link-group">
+          <li class="link"><a href="index.html">Home</a></li>
+          <li class="link"><a href="projects.html">Projects</a></li>
+          <li class="link"><a href="contacts.html">Contact</a></li>
+        </ul>
+      </nav>
     </header>
 
     <main>
-        <section id="project-detail">
-            <h1 id="project-name">Project Name</h1>
-            <p id="project-description">Project Description</p>
-            <img id="project-image" src="placehold-3129447776.jpg" alt="Project Image">
-        </section>
+      <section id="project-detail">
+        <h1 id="project-name">Project Name</h1>
+        <img id="project-image" src="images/placehold-3129447776.jpg" alt="Project Image Placeholder" />
+        <p id="project-description">Project Description</p>
+      </section>
 
-        <section id="contact-form">
-            <h2>Kontaktformular</h2>
-            <form>
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
+      <section id="contact-form">
+        <h2>Contact Form</h2>
+        <form>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required />
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
 
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" required></textarea>
+          <label for="message">Message:</label>
+          <textarea id="message" name="message" required></textarea>
 
-                <button type="submit">Submit</button>
-            </form>
-        </section>
+          <button type="submit">Submit</button>
+        </form>
+      </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 My Cool Portfolio</p>
+      <p>&copy; 2024 My Cool Portfolio</p>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const project = JSON.parse(localStorage.getItem('selectedProject'));
-            if (project && project.name && project.description) {
-                document.getElementById('project-name').textContent = project.name;
-                document.getElementById('project-description').textContent = project.description;
-                document.getElementById('project-image').src = 'placehold-3129447776.jpg';
-            } else {
-                document.getElementById('project-detail').textContent = 'No project selected.';
-            }
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get parameters from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectName = urlParams.get("name");
+        const projectDescription = urlParams.get("description");
+        const projectImage = urlParams.get("image");
+
+        // Set project name, description, and image
+        const projectNameElement = document.getElementById("project-name");
+        const projectDescriptionElement = document.getElementById(
+          "project-description"
+        );
+        const projectImageElement = document.getElementById("project-image");
+
+        projectNameElement.textContent = projectName;
+        projectDescriptionElement.textContent = projectDescription;
+        projectImageElement.src = projectImage;
+      });
     </script>
-</body>
+  </body>
 </html>
