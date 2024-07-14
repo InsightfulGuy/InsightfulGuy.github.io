@@ -47,13 +47,11 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Get parameters from URL
         const urlParams = new URLSearchParams(window.location.search);
         const projectName = urlParams.get("name");
         const projectDescription = urlParams.get("description");
         const projectImage = urlParams.get("image");
 
-        // Set project name, description, and image
         const projectNameElement = document.getElementById("project-name");
         const projectDescriptionElement = document.getElementById(
           "project-description"

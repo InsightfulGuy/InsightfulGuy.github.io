@@ -8,7 +8,7 @@ body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
   background-color: #098b94;
-  font-size: 16px; /* Base font size */
+  font-size: 16px; 
 }
 
 header {
@@ -128,7 +128,7 @@ footer p {
   padding: 20px;
   background-color: #bf6166;
   transition: transform 0.3s ease;
-  font-size: 1rem; /* Default font size for project boxes */
+  font-size: 1rem; 
 }
 
 .project-box:hover {
@@ -137,7 +137,7 @@ footer p {
 
 .project-box h3 {
   margin-bottom: 10px;
-  font-size: 1.5rem; /* Increase heading size */
+  font-size: 1.5rem; 
 }
 
 .project-box a {
@@ -191,7 +191,7 @@ footer p {
 
   .project-box {
     padding: 15px;
-    font-size: 0.8rem; /* Decrease font size on small screens */
+    font-size: 0.8rem; 
   }
 
   .project-box h3 {
@@ -210,7 +210,7 @@ footer p {
 
   .project-box {
     padding: 15px;
-    font-size: 1rem; /* Increase font size for medium screens */
+    font-size: 1rem; 
   }
 
   .project-box h3 {
@@ -224,7 +224,7 @@ footer p {
 
 @media (min-width: 1201px) {
   body {
-    font-size: 18px; /* Increase overall font size for larger screens */
+    font-size: 18px; 
   }
 
   .project-grid {
@@ -233,7 +233,7 @@ footer p {
 
   .project-box {
     padding: 20px;
-    font-size: 1.1rem; /* Further increase font size for larger screens */
+    font-size: 1.1rem; 
   }
 
   .project-box h3 {
