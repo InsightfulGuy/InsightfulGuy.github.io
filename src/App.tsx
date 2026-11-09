@@ -4,6 +4,8 @@ import ProjectModal from "./ProjectModal"
 import { projects } from "./projects"
 import { LANGS, useLang } from "./i18n"
 import RichText from "./RichText"
+import Mascot from "./Mascot"
+import { skillGroups } from "./skills"
 
 const featured = projects.find((p) => p.featured)
 const others = projects.filter((p) => p !== featured)
@@ -48,12 +50,6 @@ function App() {
     const [openId, setOpenId] = useState(projectIdFromHash)
     const openProject = projects.find((p) => p.id === openId) ?? null
 
-    const skills = [
-        { group: t("skillLanguages"), items: ["Java", "TypeScript", "Python"] },
-        { group: t("skillFrameworks"), items: ["React", "Angular"] },
-        { group: t("skillSide"), items: [t("skillGameDev"), t("skillMusic")] },
-    ]
-
     useEffect(() => {
         const onHash = () => setOpenId(projectIdFromHash())
         window.addEventListener("hashchange", onHash)
@@ -79,12 +75,13 @@ function App() {
 
             <header className="topbar">
                 <div className="container topbar-inner">
-                    <a className="brand" href="#top">
-                        tristan<span className="accent">.dev</span>
+                    <a className="brand" href="#top" aria-label={t("backToTop")}>
+                        <Mascot />
                     </a>
                     <div className="topbar-right">
                         <nav aria-label={t("navLabel")}>
                             <a href="#about">{t("navAbout")}</a>
+                            <a href="#skills">{t("navSkills")}</a>
                             <a href="#projects">{t("navProjects")}</a>
                             <a href="#contact">{t("navContact")}</a>
                         </nav>
@@ -129,24 +126,29 @@ function App() {
 
                 <section className="section container" id="about" aria-labelledby="about-title">
                     <h2 id="about-title">{t("aboutTitle")}</h2>
-                    <div className="about-grid">
-                        <p>
-                            <RichText text={t("aboutText")} />
-                        </p>
-                        <dl className="skills">
-                            {skills.map((s) => (
-                                <div key={s.group}>
-                                    <dt>{s.group}</dt>
-                                    <dd>
-                                        {s.items.map((item) => (
-                                            <span className="tag" key={item}>
-                                                {item}
-                                            </span>
-                                        ))}
-                                    </dd>
-                                </div>
-                            ))}
-                        </dl>
+                    <p className="about-text">
+                        <RichText text={t("aboutText")} />
+                    </p>
+                </section>
+
+                <section className="section container" id="skills" aria-labelledby="skills-title">
+                    <h2 id="skills-title">{t("skillsTitle")}</h2>
+                    <div className="skill-grid">
+                        {skillGroups.map((g, i) => (
+                            <div
+                                className={`skill-group${g.learning ? " learning" : ""}`}
+                                key={i}
+                            >
+                                <h3>{tx(g.title)}</h3>
+                                <ul>
+                                    {g.items.map((item) => (
+                                        <li className="tag" key={item}>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
                     </div>
                 </section>
 

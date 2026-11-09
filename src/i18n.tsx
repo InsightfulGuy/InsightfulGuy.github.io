@@ -18,26 +18,24 @@ export function pick(text: Localized, lang: Lang): string {
 const en = {
     skip: "Skip to content",
     navLabel: "Main navigation",
+    backToTop: "Back to top",
     langLabel: "Language",
     navAbout: "About",
+    navSkills: "Skills",
     navProjects: "Projects",
     navContact: "Contact",
 
     kicker: "Apprentice application developer",
     heroHi: "Hi, I'm Tristan",
     heroLead:
-        "I do programming tasks and study during the week and games, music in my free time. Currently doing my apprenticeship at [Worldline Schweiz AG](https://worldline.com/en-ch/home) and my Berufsschule at [TBZ](https://tbz.ch/).",
+        "I do programming tasks/study during the week and games + music in my free time. Currently doing my apprenticeship at [Worldline Schweiz AG](https://worldline.com/en-ch/home) and my Berufsschule at [TBZ](https://tbz.ch/).",
     viewProjects: "View projects",
     avatarAlt: "Sketch of Kettlehead, the knight from my game",
 
     aboutTitle: "About",
     aboutText:
-        "I like building things that line up with my interests. At work that's web apps and backend code; at home it's pixel-art games, recording songs and whatever media project I'm into at the moment.",
-    skillLanguages: "languages",
-    skillFrameworks: "frameworks",
-    skillSide: "on the side",
-    skillGameDev: "Game dev",
-    skillMusic: "Music production",
+        "I like building things that line up with my interests. At work that's web apps and backend code; at home it's pixel-art games, recording songs and whatever media I'm into at the moment :)",
+    skillsTitle: "Skills",
 
     projectsTitle: "Projects",
     details: "Details",
@@ -54,7 +52,7 @@ const en = {
 
     contactTitle: "Get in touch",
     contactText: "Want to work together or just say hi? My inbox is open.",
-    builtWith: "Built with React + Vite",
+    builtWith: "Built with React + Vite and designed with Figma",
 }
 
 type Dict = typeof en
@@ -62,8 +60,10 @@ type Dict = typeof en
 const de: Dict = {
     skip: "Zum Inhalt springen",
     navLabel: "Hauptnavigation",
+    backToTop: "Nach oben",
     langLabel: "Sprache",
     navAbout: "Über mich",
+    navSkills: "Skills",
     navProjects: "Projekte",
     navContact: "Kontakt",
 
@@ -77,11 +77,7 @@ const de: Dict = {
     aboutTitle: "Über mich",
     aboutText:
         "Ich baue gerne Dinge, die zu meinen Interessen passen. Bei der Arbeit sind das Webanwendungen und Backend-Code, zu Hause Pixel-Art-Games, eigene Songs und das Medienprojekt, das mich gerade begeistert.",
-    skillLanguages: "Programmiersprachen",
-    skillFrameworks: "Frameworks",
-    skillSide: "Nebenbei",
-    skillGameDev: "Game-Entwicklung",
-    skillMusic: "Musikproduktion",
+    skillsTitle: "Skills",
 
     projectsTitle: "Projekte",
     details: "Details",

@@ -33,7 +33,7 @@ export const projects: Project[] = [
         type: { en: "Indie game · 2D platformer", de: "Indie-Game · 2D-Platformer" },
         title: "Kettlehead",
         summary: {
-            en: "A knight sets out to save the princess, armed with a frying pan and a Kettle-Helmet",
+            en: "A knight sets out to save the princess, armed with a frying pan and a Kettle-Helmet.",
             de: "Ein Ritter zieht los, um die Prinzessin zu retten, bewaffnet mit einer Bratpfanne and einem Kesselhelm",
         },
         status: { en: "In development", de: "In Entwicklung" },
@@ -95,8 +95,8 @@ export const projects: Project[] = [
         tags: ["Design", "Video"],
         description: [
             {
-                en: "Add sketches, drafts and the final cover here once they're ready.",
-                de: "Hier Skizzen, Entwürfe und das finale Cover ergänzen, sobald sie fertig sind.",
+                en: "When the Album is finished, I might also wan't to make cover art, to improve my designing skills.",
+                de: "Wenn das Album fertig ist, kann es sein dass ich noch ein Cover-Art für es mache, um meine Design-Skills zu verbessern.",
             },
         ],
         media: [],

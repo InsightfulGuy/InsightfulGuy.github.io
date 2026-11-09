@@ -123,6 +123,14 @@
     gap: 24px;
 }
 
+/* ---------- header mascot (brand) ---------- */
+
+.mascot {
+    display: block;
+    height: 48px;
+    width: auto;
+}
+
 .lang-switch {
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -282,35 +290,54 @@
 
 /* ---------- about ---------- */
 
-.about-grid {
-    display: grid;
-    gap: 40px;
-    grid-template-columns: 1.1fr 1fr;
-}
-
-.about-grid > p {
+.about-text {
     color: var(--muted);
     font-size: 17px;
+    max-width: 42rem;
 }
 
-.skills {
+/* ---------- skills ---------- */
+
+.skill-grid {
     display: grid;
-    gap: 18px;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
 }
 
-.skills dt {
+.skill-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+
+.skill-group h3 {
     color: var(--muted);
     font-family: var(--mono);
     font-size: 12px;
-    margin-bottom: 8px;
-    text-transform: uppercase;
+    font-weight: 500;
     letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    text-transform: uppercase;
 }
 
-.skills dd {
+.skill-group ul {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.skill-group.learning {
+    background: transparent;
+    border-style: dashed;
+}
+
+.skill-group.learning .tag {
+    background: transparent;
+    border: 1px dashed color-mix(in srgb, var(--accent) 60%, var(--border));
 }
 
 .tag {
@@ -738,7 +765,6 @@ body:has(.modal[open]) {
         width: 96px;
     }
 
-    .about-grid,
     .featured,
     .card-grid {
         grid-template-columns: 1fr;
