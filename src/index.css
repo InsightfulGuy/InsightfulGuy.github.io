@@ -112,9 +112,43 @@
     text-decoration: none;
 }
 
+.topbar-right {
+    align-items: center;
+    display: flex;
+    gap: 24px;
+}
+
 .topbar nav {
     display: flex;
     gap: 24px;
+}
+
+.lang-switch {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    display: flex;
+    padding: 2px;
+}
+
+.lang-switch button {
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 3px 9px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.lang-switch button:hover {
+    color: var(--text);
+}
+
+.lang-switch button[aria-pressed='true'] {
+    background: var(--accent);
+    color: var(--on-accent);
 }
 
 .topbar nav a {
@@ -365,6 +399,199 @@
     gap: 20px;
     grid-template-columns: 1fr 1fr;
     margin-top: 20px;
+}
+
+/* ---------- clickable project cards ---------- */
+
+.clickable {
+    cursor: pointer;
+    position: relative;
+}
+
+.card-link {
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    letter-spacing: inherit;
+    padding: 0;
+    text-align: left;
+}
+
+/* Stretch the title button over the whole card so the card is clickable. */
+.card-link::after {
+    content: '';
+    inset: 0;
+    position: absolute;
+}
+
+.card-link:focus-visible {
+    outline: none;
+}
+
+.clickable:has(.card-link:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.card-foot {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.card-foot .status {
+    margin-top: 0;
+}
+
+.details-hint {
+    align-items: center;
+    color: var(--accent);
+    display: inline-flex;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 6px;
+    margin-left: auto;
+    transition: gap 0.15s;
+}
+
+.clickable:hover .details-hint {
+    gap: 10px;
+}
+
+/* ---------- project modal ---------- */
+
+body:has(.modal[open]) {
+    overflow: hidden;
+}
+
+.modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: var(--text);
+    margin: auto;
+    max-height: calc(100dvh - 48px);
+    max-width: min(760px, calc(100vw - 32px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0;
+    width: 100%;
+}
+
+.modal::backdrop {
+    backdrop-filter: blur(4px);
+    background: rgb(10 12 9 / 0.55);
+}
+
+.modal[open] {
+    animation: modal-in 0.2s ease-out;
+}
+
+.modal-inner {
+    padding: clamp(24px, 5vw, 40px);
+    position: relative;
+}
+
+.modal-close {
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    height: 36px;
+    justify-content: center;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 36px;
+}
+
+.modal-close:hover {
+    color: var(--text);
+}
+
+.modal h2 {
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 6px 48px 16px 0;
+}
+
+.modal-tags {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.modal-tags .status {
+    margin-top: 0;
+}
+
+.modal-text {
+    color: var(--muted);
+    display: grid;
+    font-size: 16px;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.modal-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.media-list {
+    display: grid;
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.media img,
+.media video,
+.media iframe {
+    background: #f3efe6;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: block;
+    width: 100%;
+}
+
+.media img {
+    height: auto;
+}
+
+.media iframe {
+    aspect-ratio: 16 / 9;
+    border: 0;
+}
+
+.media audio {
+    width: 100%;
+}
+
+.media figcaption {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+@keyframes modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
 }
 
 /* ---------- github repos ---------- */
