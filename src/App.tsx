@@ -2,12 +2,7 @@ import { useEffect, useState } from "react"
 import GitHubRepos from "./GitHubRepos"
 import ProjectModal from "./ProjectModal"
 import { projects } from "./projects"
-
-const skills = [
-    { group: "languages", items: ["Java", "TypeScript", "Python"] },
-    { group: "frameworks", items: ["React", "Angular"] },
-    { group: "on the side", items: ["Game dev", "Music production"] },
-]
+import { LANGS, useLang } from "./i18n"
 
 const featured = projects.find((p) => p.featured)
 const others = projects.filter((p) => p !== featured)
@@ -27,10 +22,36 @@ function projectIdFromHash() {
     return hash.startsWith(HASH_PREFIX) ? decodeURIComponent(hash.slice(HASH_PREFIX.length)) : null
 }
 
+function LangSwitch() {
+    const { lang, setLang, t } = useLang()
+    return (
+        <div className="lang-switch" role="group" aria-label={t("langLabel")}>
+            {LANGS.map((l) => (
+                <button
+                    key={l}
+                    type="button"
+                    lang={l}
+                    aria-pressed={lang === l}
+                    onClick={() => setLang(l)}
+                >
+                    {l.toUpperCase()}
+                </button>
+            ))}
+        </div>
+    )
+}
+
 function App() {
+    const { t, tx } = useLang()
     const year = new Date().getFullYear()
     const [openId, setOpenId] = useState(projectIdFromHash)
     const openProject = projects.find((p) => p.id === openId) ?? null
+
+    const skills = [
+        { group: t("skillLanguages"), items: ["Java", "TypeScript", "Python"] },
+        { group: t("skillFrameworks"), items: ["React", "Angular"] },
+        { group: t("skillSide"), items: [t("skillGameDev"), t("skillMusic")] },
+    ]
 
     useEffect(() => {
         const onHash = () => setOpenId(projectIdFromHash())
@@ -52,7 +73,7 @@ function App() {
     return (
         <>
             <a className="skip-link" href="#main">
-                Skip to content
+                {t("skip")}
             </a>
 
             <header className="topbar">
@@ -60,28 +81,29 @@ function App() {
                     <a className="brand" href="#top">
                         tristan<span className="accent">.dev</span>
                     </a>
-                    <nav aria-label="Main navigation">
-                        <a href="#about">About</a>
-                        <a href="#projects">Projects</a>
-                        <a href="#contact">Contact</a>
-                    </nav>
+                    <div className="topbar-right">
+                        <nav aria-label={t("navLabel")}>
+                            <a href="#about">{t("navAbout")}</a>
+                            <a href="#projects">{t("navProjects")}</a>
+                            <a href="#contact">{t("navContact")}</a>
+                        </nav>
+                        <LangSwitch />
+                    </div>
                 </div>
             </header>
 
             <main id="main">
                 <section className="hero container" id="top">
                     <div className="hero-text">
-                        <p className="kicker">Apprentice application developer</p>
+                        <p className="kicker">{t("kicker")}</p>
                         <h1>
-                            Hi, I'm Tristan<span className="accent">.</span>
+                            {t("heroHi")}
+                            <span className="accent">.</span>
                         </h1>
-                        <p className="lead">
-                            I build web applications during the week and games and music in my
-                            free time. Currently doing my apprenticeship at Worldline Schweiz AG.
-                        </p>
+                        <p className="lead">{t("heroLead")}</p>
                         <div className="actions">
                             <a className="btn btn-primary" href="#projects">
-                                View projects <ArrowIcon />
+                                {t("viewProjects")} <ArrowIcon />
                             </a>
                             <a
                                 className="btn btn-ghost"
@@ -96,20 +118,16 @@ function App() {
                     <img
                         className="avatar"
                         src="/head-icon.png"
-                        alt="Sketch of Kettlehead, the knight from my game"
+                        alt={t("avatarAlt")}
                         width="160"
                         height="160"
                     />
                 </section>
 
                 <section className="section container" id="about" aria-labelledby="about-title">
-                    <h2 id="about-title">About</h2>
+                    <h2 id="about-title">{t("aboutTitle")}</h2>
                     <div className="about-grid">
-                        <p>
-                            I like building things that line up with my interests. At work that's
-                            web apps and backend code; at home it's pixel-art games, recording
-                            songs and whatever media project I'm into at the moment.
-                        </p>
+                        <p>{t("aboutText")}</p>
                         <dl className="skills">
                             {skills.map((s) => (
                                 <div key={s.group}>
@@ -132,7 +150,7 @@ function App() {
                     id="projects"
                     aria-labelledby="projects-title"
                 >
-                    <h2 id="projects-title">Projects</h2>
+                    <h2 id="projects-title">{t("projectsTitle")}</h2>
 
                     {featured && (
                         <article className="card featured clickable">
@@ -142,19 +160,19 @@ function App() {
                                 </div>
                             )}
                             <div className="featured-body">
-                                <p className="card-type">{featured.type}</p>
+                                <p className="card-type">{tx(featured.type)}</p>
                                 <h3>
                                     <button className="card-link" onClick={() => open(featured.id)}>
-                                        {featured.title}
+                                        {tx(featured.title)}
                                     </button>
                                 </h3>
-                                <p>{featured.summary}</p>
+                                <p>{tx(featured.summary)}</p>
                                 <div className="card-foot">
                                     {featured.status && (
-                                        <span className="status">{featured.status}</span>
+                                        <span className="status">{tx(featured.status)}</span>
                                     )}
                                     <span className="details-hint" aria-hidden="true">
-                                        Details <ArrowIcon />
+                                        {t("details")} <ArrowIcon />
                                     </span>
                                 </div>
                             </div>
@@ -164,24 +182,24 @@ function App() {
                     <div className="card-grid">
                         {others.map((p) => (
                             <article className="card clickable" key={p.id}>
-                                <p className="card-type">{p.type}</p>
+                                <p className="card-type">{tx(p.type)}</p>
                                 <h3>
                                     <button className="card-link" onClick={() => open(p.id)}>
-                                        {p.title}
+                                        {tx(p.title)}
                                     </button>
                                 </h3>
-                                <p>{p.summary}</p>
+                                <p>{tx(p.summary)}</p>
                                 <div className="card-foot">
-                                    {p.status && <span className="status">{p.status}</span>}
+                                    {p.status && <span className="status">{tx(p.status)}</span>}
                                     <span className="details-hint" aria-hidden="true">
-                                        Details <ArrowIcon />
+                                        {t("details")} <ArrowIcon />
                                     </span>
                                 </div>
                             </article>
                         ))}
                     </div>
 
-                    <h3 className="subheading">On GitHub</h3>
+                    <h3 className="subheading">{t("onGithub")}</h3>
                     <GitHubRepos />
                 </section>
 
@@ -190,8 +208,8 @@ function App() {
                     id="contact"
                     aria-labelledby="contact-title"
                 >
-                    <h2 id="contact-title">Get in touch</h2>
-                    <p>Want to work together or just say hi? My inbox is open.</p>
+                    <h2 id="contact-title">{t("contactTitle")}</h2>
+                    <p>{t("contactText")}</p>
                     <a className="btn btn-primary" href="mailto:tristan.evans@bluewin.ch">
                         tristan.evans@bluewin.ch <ArrowIcon />
                     </a>
@@ -214,7 +232,7 @@ function App() {
 
             <footer className="container footer">
                 <span>© {year} Tristan Evans</span>
-                <span>Built with React + Vite</span>
+                <span>{t("builtWith")}</span>
             </footer>
         </>
     )

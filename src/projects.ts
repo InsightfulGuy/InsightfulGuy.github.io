@@ -51,8 +51,8 @@ export const projects: Project[] = [
         type: { en: "Indie game · 2D platformer", de: "Indie-Game · 2D-Platformer" },
         title: "Kettlehead",
         summary: {
-            en: "A knight sets out to save the princess, armed with a frying pan and a kettle for a helmet.",
-            de: "Ein Ritter zieht los, um die Prinzessin zu retten, bewaffnet mit einer Bratpfanne und einem Wasserkocher als Helm.",
+            en: "A knight sets out to save the princess, armed with a frying pan and a Kettle-Helmet",
+            de: "Ein Ritter zieht los, um die Prinzessin zu retten, bewaffnet mit einer Bratpfanne and einem Kesselhelm",
         },
         status: { en: "In development", de: "In Entwicklung" },
         featured: true,
@@ -62,13 +62,14 @@ export const projects: Project[] = [
             {
                 en: "A 2D platformer about a very under-equipped knight. I'm doing the code, the art and the music myself.",
                 de: "Ein 2D-Platformer über einen sehr schlecht ausgerüsteten Ritter. Code, Grafik und Musik mache ich alles selbst.",
-            },
-            {
-                en: "Write more about the gameplay, the tools you use and what you've learned here.",
-                de: "Hier mehr über das Gameplay, die verwendeten Tools und das Gelernte schreiben.",
-            },
+            }
         ],
         media: [
+            {
+                type: "video",
+                src: "/public/gameplay-test.mp4",
+                caption: "Testing gameplay mechanics and physics",
+            },
             {
                 type: "image",
                 src: "/spritesheet.png",
@@ -84,16 +85,16 @@ export const projects: Project[] = [
     {
         id: "album",
         type: { en: "Music", de: "Musik" },
-        title: { en: "Vertiefungsarbeit album", de: "Album zur Vertiefungsarbeit" },
+        title: { en: "In-Depth Project Music-Album", de: "Album zur Vertiefungsarbeit" },
         summary: {
-            en: "A rock album for school about the struggles and worries of everyday people.",
+            en: "A rock album for my Vertiefungsarbeit for my Final Grade in my Apprenticeship. It's about the struggles and worries of Gen Z people.",
             de: "Ein Rockalbum für die Schule über die Sorgen und Kämpfe ganz normaler Menschen.",
         },
         status: { en: "Coming soon", de: "Bald verfügbar" },
         tags: [{ en: "Music production", de: "Musikproduktion" }, "Rock"],
         description: [
             {
-                en: "Add details about the songs, recording setup and what the album is about.",
+                en: "This Project is about the creation of a music album for my Vertiefungsarbeit (final project) in my apprenticeship. The album is about the struggles and worries of Gen Z.",
                 de: "Hier Details zu den Songs, zum Aufnahme-Setup und zum Thema des Albums ergänzen.",
             },
         ],
