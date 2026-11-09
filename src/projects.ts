@@ -49,7 +49,7 @@ export const projects: Project[] = [
         media: [
             {
                 type: "video",
-                src: "/public/gameplay-test.mp4",
+                src: "/gameplay-test.mp4",
                 caption: "Testing gameplay mechanics and physics",
             },
             {
