@@ -1,23 +1,5 @@
 import type { Localized } from "./i18n"
 
-/*
- * Your projects live here. Each one gets a card on the page and a detail pop-up.
- *
- * Translations: any text can be a plain string (same in both languages) or
- *   { en: "English text", de: "Deutscher Text" }
- * If "de" is left out, the English text is shown on the German page.
- *
- * Media files: put them in  public/projects/<id>/  and reference them as
- * "/projects/<id>/file.png". Supported media types:
- *   { type: "image",   src: "/projects/x/shot.png", alt: "...", caption?: "..." }
- *   { type: "video",   src: "/projects/x/clip.mp4", caption?: "...", poster?: "/projects/x/poster.png" }
- *   { type: "audio",   src: "/projects/x/song.mp3", caption?: "..." }
- *   { type: "youtube", id: "dQw4w9WgXcQ", caption?: "..." }   (the id from the YouTube URL)
- *
- * Keep media files small (compress images, keep videos short). Big files are
- * better uploaded to YouTube and embedded with type "youtube".
- */
-
 export type Media =
     | { type: "image"; src: string; alt: Localized; caption?: Localized }
     | { type: "video"; src: string; caption?: Localized; poster?: string }

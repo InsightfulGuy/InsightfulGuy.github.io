@@ -26,7 +26,7 @@ const en = {
     kicker: "Apprentice application developer",
     heroHi: "Hi, I'm Tristan",
     heroLead:
-        "I build web applications during the week and games and music in my free time. Currently doing my apprenticeship at Worldline Schweiz AG.",
+        "I build web applications during the week and games and music in my free time. Currently doing my apprenticeship at [Worldline Schweiz AG](https://worldline.com/en-ch/home) and my Berufsschule at [TBZ Zürich](https://tbz.ch/).",
     viewProjects: "View projects",
     avatarAlt: "Sketch of Kettlehead, the knight from my game",
 
@@ -70,7 +70,7 @@ const de: Dict = {
     kicker: "Applikationsentwickler in Ausbildung",
     heroHi: "Hallo, ich bin Tristan",
     heroLead:
-        "Unter der Woche entwickle ich Webanwendungen, in meiner Freizeit Games und Musik. Zurzeit mache ich meine Lehre bei der Worldline Schweiz AG.",
+        "Unter der Woche entwickle ich Webanwendungen, in meiner Freizeit Games und Musik. Zurzeit mache ich meine Lehre bei der [Worldline Schweiz AG](https://worldline.com/en-ch/home) und die Berufsschule an der [TBZ Zürich](https://tbz.ch/).",
     viewProjects: "Projekte ansehen",
     avatarAlt: "Skizze von Kettlehead, dem Ritter aus meinem Game",
 

@@ -3,6 +3,7 @@ import GitHubRepos from "./GitHubRepos"
 import ProjectModal from "./ProjectModal"
 import { projects } from "./projects"
 import { LANGS, useLang } from "./i18n"
+import RichText from "./RichText"
 
 const featured = projects.find((p) => p.featured)
 const others = projects.filter((p) => p !== featured)
@@ -100,7 +101,9 @@ function App() {
                             {t("heroHi")}
                             <span className="accent">.</span>
                         </h1>
-                        <p className="lead">{t("heroLead")}</p>
+                        <p className="lead">
+                            <RichText text={t("heroLead")} />
+                        </p>
                         <div className="actions">
                             <a className="btn btn-primary" href="#projects">
                                 {t("viewProjects")} <ArrowIcon />
@@ -127,7 +130,9 @@ function App() {
                 <section className="section container" id="about" aria-labelledby="about-title">
                     <h2 id="about-title">{t("aboutTitle")}</h2>
                     <div className="about-grid">
-                        <p>{t("aboutText")}</p>
+                        <p>
+                            <RichText text={t("aboutText")} />
+                        </p>
                         <dl className="skills">
                             {skills.map((s) => (
                                 <div key={s.group}>
@@ -166,7 +171,9 @@ function App() {
                                         {tx(featured.title)}
                                     </button>
                                 </h3>
-                                <p>{tx(featured.summary)}</p>
+                                <p>
+                                    <RichText text={tx(featured.summary)} />
+                                </p>
                                 <div className="card-foot">
                                     {featured.status && (
                                         <span className="status">{tx(featured.status)}</span>
@@ -188,7 +195,9 @@ function App() {
                                         {tx(p.title)}
                                     </button>
                                 </h3>
-                                <p>{tx(p.summary)}</p>
+                                <p>
+                                    <RichText text={tx(p.summary)} />
+                                </p>
                                 <div className="card-foot">
                                     {p.status && <span className="status">{tx(p.status)}</span>}
                                     <span className="details-hint" aria-hidden="true">
@@ -209,7 +218,9 @@ function App() {
                     aria-labelledby="contact-title"
                 >
                     <h2 id="contact-title">{t("contactTitle")}</h2>
-                    <p>{t("contactText")}</p>
+                    <p>
+                        <RichText text={t("contactText")} />
+                    </p>
                     <a className="btn btn-primary" href="mailto:tristan.evans@bluewin.ch">
                         tristan.evans@bluewin.ch <ArrowIcon />
                     </a>
