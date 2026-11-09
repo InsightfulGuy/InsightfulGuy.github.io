@@ -30,7 +30,7 @@ export type Project = {
 export const projects: Project[] = [
     {
         id: "kettlehead",
-        type: { en: "Indie game · 2D platformer", de: "Indie-Game · 2D-Platformer" },
+        type: { en: "Indie game · 2D Game", de: "Indie-Game · 2D-Platformer" },
         title: "Kettlehead",
         summary: {
             en: "A knight sets out to save the princess, armed with a frying pan and a Kettle-Helmet.",
@@ -42,8 +42,12 @@ export const projects: Project[] = [
         tags: [{ en: "Game dev", de: "Game-Entwicklung" }, "Pixel Art"],
         description: [
             {
-                en: "A 2D platformer about a very under-equipped knight. I'm doing the code, the art and the music myself.",
-                de: "Ein 2D-Platformer über einen sehr schlecht ausgerüsteten Ritter. Code, Grafik und Musik mache ich alles selbst.",
+                en: "A 2D game about a very under-equipped knight. I'm doing the code, the art and the music myself.",
+                de: "Ein 2D-Spiel über einen sehr schlecht ausgerüsteten Ritter. Code, Grafik und Musik mache ich alles selbst.",
+            },
+            {
+                en: "The game is a mix between a 2D top down fighting game and a versus 1v1 fight.",
+                de: "Das Spiel ist eine Mischung aus einem 2D-Kampfspiel mit Draufsicht und einem 1-gegen-1-Kampf.",
             }
         ],
         media: [
