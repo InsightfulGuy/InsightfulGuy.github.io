@@ -120,7 +120,7 @@ function App() {
                     </div>
                     <img
                         className="avatar"
-                        src="/head-icon.png"
+                        src="/pfp-neil.jpg"
                         alt={t("avatarAlt")}
                         width="160"
                         height="160"

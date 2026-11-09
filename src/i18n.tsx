@@ -26,7 +26,7 @@ const en = {
     kicker: "Apprentice application developer",
     heroHi: "Hi, I'm Tristan",
     heroLead:
-        "I build web applications during the week and games and music in my free time. Currently doing my apprenticeship at [Worldline Schweiz AG](https://worldline.com/en-ch/home) and my Berufsschule at [TBZ Zürich](https://tbz.ch/).",
+        "I do programming tasks and study during the week and games, music in my free time. Currently doing my apprenticeship at [Worldline Schweiz AG](https://worldline.com/en-ch/home) and my Berufsschule at [TBZ](https://tbz.ch/).",
     viewProjects: "View projects",
     avatarAlt: "Sketch of Kettlehead, the knight from my game",
 

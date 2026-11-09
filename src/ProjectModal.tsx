@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react"
 import type { Media, Project } from "./projects"
 import { useLang } from "./i18n"
+import RichText from "./RichText"
 
 function MediaItem({ item }: { item: Media }) {
     const { t, tx } = useLang()
@@ -31,7 +32,11 @@ function MediaItem({ item }: { item: Media }) {
     return (
         <figure className={`media media-${item.type}`}>
             {content}
-            {caption && <figcaption>{caption}</figcaption>}
+            {caption && (
+                <figcaption>
+                    <RichText text={caption} />
+                </figcaption>
+            )}
         </figure>
     )
 }
@@ -86,7 +91,9 @@ export default function ProjectModal({ project, onClose }: Props) {
 
                     <div className="modal-text">
                         {(project.description ?? [project.summary]).map((p, i) => (
-                            <p key={i}>{tx(p)}</p>
+                            <p key={i}>
+                                <RichText text={tx(p)} />
+                            </p>
                         ))}
                     </div>
 
