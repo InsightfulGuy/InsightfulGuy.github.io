@@ -1,236 +1,222 @@
-const Arrow = () => (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className="arrow">
-        <path d="M5 12h13M13 6l6 6-6 6" />
-    </svg>
-)
+import { useEffect, useState } from "react"
+import GitHubRepos from "./GitHubRepos"
+import ProjectModal from "./ProjectModal"
+import { projects } from "./projects"
 
-const Star = ({ className = "" }: { className?: string }) => (
-    <svg aria-hidden="true" className={className} viewBox="0 0 100 100">
-        <path d="M50 4 62 38 97 38 69 59 80 94 50 72 20 94 31 59 3 38 38 38Z" />
-    </svg>
-)
-
-const Bolt = ({ className = "" }: { className?: string }) => (
-    <svg aria-hidden="true" className={className} viewBox="0 0 60 100">
-        <path d="M38 2 6 56h22L18 98 54 38H32Z" />
-    </svg>
-)
-
-const Pin = ({ className = "" }: { className?: string }) => (
-    <svg aria-hidden="true" className={`pin ${className}`} viewBox="0 0 120 30">
-        <path d="M14 15h88a10 10 0 1 0 0-.1M14 15a10 10 0 0 1 10-10h70" />
-        <circle cx="10" cy="15" r="7" />
-    </svg>
-)
-
-const Tape = ({ className = "" }: { className?: string }) => (
-    <span aria-hidden="true" className={`tape ${className}`} />
-)
-
-const Scribble = ({ className = "" }: { className?: string }) => (
-    <svg aria-hidden="true" className={`scribble ${className}`} viewBox="0 0 200 40">
-        <path d="M4 30c20-24 30-24 38 0s20 22 34-2 26-22 36 2 22 20 36-4 24-20 46 0" />
-    </svg>
-)
-
-const stats = [
-    { label: "code", value: 85 },
-    { label: "music", value: 70 },
-    { label: "game dev", value: 75 },
-    { label: "sleep", value: 15 },
+const skills = [
+    { group: "languages", items: ["Java", "TypeScript", "Python"] },
+    { group: "frameworks", items: ["React", "Angular"] },
+    { group: "on the side", items: ["Game dev", "Music production"] },
 ]
+
+const featured = projects.find((p) => p.featured)
+const others = projects.filter((p) => p !== featured)
+
+const ArrowIcon = () => (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="icon">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+)
+
+// The open project is kept in the URL (#project=<id>) so it can be linked
+// to directly and the browser back button closes it.
+const HASH_PREFIX = "#project="
+
+function projectIdFromHash() {
+    const hash = window.location.hash
+    return hash.startsWith(HASH_PREFIX) ? decodeURIComponent(hash.slice(HASH_PREFIX.length)) : null
+}
 
 function App() {
     const year = new Date().getFullYear()
+    const [openId, setOpenId] = useState(projectIdFromHash)
+    const openProject = projects.find((p) => p.id === openId) ?? null
+
+    useEffect(() => {
+        const onHash = () => setOpenId(projectIdFromHash())
+        window.addEventListener("hashchange", onHash)
+        return () => window.removeEventListener("hashchange", onHash)
+    }, [])
+
+    const open = (id: string) => {
+        window.location.hash = `project=${encodeURIComponent(id)}`
+    }
+
+    const close = () => {
+        if (projectIdFromHash()) {
+            history.replaceState(null, "", window.location.pathname + window.location.search)
+        }
+        setOpenId(null)
+    }
 
     return (
-        <div className="site-shell">
+        <>
             <a className="skip-link" href="#main">
                 Skip to content
             </a>
 
             <header className="topbar">
-                <a className="brand" href="#top" aria-label="Go to top">
-                    <span className="brand-mark">T</span>
-                    <span>tristan</span>
-                </a>
-                <nav aria-label="Main navigation">
-                    <a href="#about">about</a>
-                    <a href="#work">work</a>
-                    <a className="nav-contact" href="#contact">
-                        Contact me
+                <div className="container topbar-inner">
+                    <a className="brand" href="#top">
+                        tristan<span className="accent">.dev</span>
                     </a>
-                </nav>
+                    <nav aria-label="Main navigation">
+                        <a href="#about">About</a>
+                        <a href="#projects">Projects</a>
+                        <a href="#contact">Contact</a>
+                    </nav>
+                </div>
             </header>
 
             <main id="main">
-                <section className="hero" id="top" aria-labelledby="hero-title">
-                    <div className="checker checker-hero" aria-hidden="true" />
-                    <div className="paper-scrap scrap-a" aria-hidden="true" />
-                    <div className="paper-scrap scrap-b" aria-hidden="true" />
-
-                    <span className="label-strip">
-                        dev / music / games
-                    </span>
-
-                    <h1 id="hero-title">
-                        <span className="cut cut-1">hello</span>
-                        <span className="cut cut-2">there</span>
-                    </h1>
-                    <Scribble className="hero-underline" />
-
-                    <a className="btn" href="#work">
-                        see my stuff <Arrow />
-                    </a>
-
-                    <Star className="doodle-star star-1" />
-                    <Star className="doodle-star star-2" />
-                    <Bolt className="doodle-bolt bolt-1" />
-
-                    <div className="sticker mixtape" aria-hidden="true">
-                        <Tape className="tape-mixtape" />
-                        <div className="cd">
-                            <span></span>
-                            <i />
+                <section className="hero container" id="top">
+                    <div className="hero-text">
+                        <p className="kicker">Apprentice application developer</p>
+                        <h1>
+                            Hi, I'm Tristan<span className="accent">.</span>
+                        </h1>
+                        <p className="lead">
+                            I build web applications during the week and games and music in my
+                            free time. Currently doing my apprenticeship at Worldline Schweiz AG.
+                        </p>
+                        <div className="actions">
+                            <a className="btn btn-primary" href="#projects">
+                                View projects <ArrowIcon />
+                            </a>
+                            <a
+                                className="btn btn-ghost"
+                                href="https://github.com/InsightfulGuy"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                GitHub
+                            </a>
                         </div>
                     </div>
+                    <img
+                        className="avatar"
+                        src="/head-icon.png"
+                        alt="Sketch of Kettlehead, the knight from my game"
+                        width="160"
+                        height="160"
+                    />
+                </section>
 
-                    <div className="sticker smiley" aria-hidden="true">
-                        <span>x &nbsp; x</span>
-                        <span className="smiley-mouth">◡</span>
+                <section className="section container" id="about" aria-labelledby="about-title">
+                    <h2 id="about-title">About</h2>
+                    <div className="about-grid">
+                        <p>
+                            I like building things that line up with my interests. At work that's
+                            web apps and backend code; at home it's pixel-art games, recording
+                            songs and whatever media project I'm into at the moment.
+                        </p>
+                        <dl className="skills">
+                            {skills.map((s) => (
+                                <div key={s.group}>
+                                    <dt>{s.group}</dt>
+                                    <dd>
+                                        {s.items.map((item) => (
+                                            <span className="tag" key={item}>
+                                                {item}
+                                            </span>
+                                        ))}
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
                     </div>
                 </section>
 
-                <div className="caution" aria-hidden="true">
-                </div>
-
                 <section
-                    className="about section-pad"
-                    id="about"
-                    aria-labelledby="about-title"
+                    className="section container"
+                    id="projects"
+                    aria-labelledby="projects-title"
                 >
-                    <div className="about-copy">
-                        <p className="eyebrow">About</p>
-                        <h2 id="about-title">
-                            hi, I'm <span className="marker">tristan.</span>
-                        </h2>
-                        <div className="lined-paper">
-                            <p>
-                                I work currently in an apprenticeship at Worldline Schweiz AG, make hobby games, music and random media in my free time. I like to build things that align with my hobbies and interests :)
-                            </p>
-                        </div>
-                        <div className="patches">
-                            <span>react</span>
-                            <span>typescript</span>
-                            <span>angular</span>
-                            <span>java</span>
-                            <span>python</span>
-                            <span>game dev</span>
-                            <span>music prod</span>
-                            <span>...and more on my Github ↓</span>
-                        </div>
+                    <h2 id="projects-title">Projects</h2>
+
+                    {featured && (
+                        <article className="card featured clickable">
+                            {featured.cover && (
+                                <div className="featured-media">
+                                    <img src={featured.cover} alt="" />
+                                </div>
+                            )}
+                            <div className="featured-body">
+                                <p className="card-type">{featured.type}</p>
+                                <h3>
+                                    <button className="card-link" onClick={() => open(featured.id)}>
+                                        {featured.title}
+                                    </button>
+                                </h3>
+                                <p>{featured.summary}</p>
+                                <div className="card-foot">
+                                    {featured.status && (
+                                        <span className="status">{featured.status}</span>
+                                    )}
+                                    <span className="details-hint" aria-hidden="true">
+                                        Details <ArrowIcon />
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+                    )}
+
+                    <div className="card-grid">
+                        {others.map((p) => (
+                            <article className="card clickable" key={p.id}>
+                                <p className="card-type">{p.type}</p>
+                                <h3>
+                                    <button className="card-link" onClick={() => open(p.id)}>
+                                        {p.title}
+                                    </button>
+                                </h3>
+                                <p>{p.summary}</p>
+                                <div className="card-foot">
+                                    {p.status && <span className="status">{p.status}</span>}
+                                    <span className="details-hint" aria-hidden="true">
+                                        Details <ArrowIcon />
+                                    </span>
+                                </div>
+                            </article>
+                        ))}
                     </div>
+
+                    <h3 className="subheading">On GitHub</h3>
+                    <GitHubRepos />
                 </section>
 
                 <section
-                    className="work section-pad"
-                    id="work"
-                    aria-labelledby="work-title"
-                >
-                    <Star className="doodle-star star-work" />
-                    <div className="section-heading">
-                        <div>
-                            <p className="eyebrow light">work</p>
-                            <h2 id="work-title">
-                                stuff i'm <span className="marker">doing</span>
-                            </h2>
-                        </div>
-                    </div>
-
-                    <article className="project featured-project">
-                        <Tape className="tape-feature" />
-                        <Tape className="tape-feature-2" />
-                        <div className="feature-visual">
-                            <img
-                                className="feature-image"
-                                src="/spritesheet.png"
-                                alt="Kettlehead character spritesheet"
-                            />
-                        </div>
-                        <div className="project-copy">
-                            <span className="project-type">indie game · 2D platformer</span>
-                            <h3>kettlehead</h3>
-                            <p>
-                                A knight goes on a quest to save the
-                                princess. Armed with a frying pan and a kettle helmet
-                            </p>
-                        </div>
-                    </article>
-
-                    <div className="project-grid">
-                        <article className="project project-small flyer-ink">
-                            <Tape className="tape-flyer" />
-                            <span className="project-type">music</span>
-                            <h3>Vertiefungsarbeit School</h3>
-                            <p>A Rock Album for Schoolwork about the struggles and worries of everyday people</p>
-                            <span className="soon">more soon</span>
-                        </article>
-
-                        <article className="project project-small flyer-tan">
-                            <Tape className="tape-flyer" />
-                            <span className="project-type">design/video</span>
-                            <h3>Designing my Rock Album</h3>
-                            <p>Design draw my own Rock Album cover and potentially record a Music-Video for it</p>
-                            <span className="soon">more soon</span>
-                        </article>
-                    </div>
-                </section>
-
-                <section
-                    className="contact section-pad"
+                    className="section container contact"
                     id="contact"
                     aria-labelledby="contact-title"
                 >
-                    <div className="checker checker-contact" aria-hidden="true" />
-                    <Star className="doodle-star star-contact-1" />
-                    <Bolt className="doodle-bolt bolt-contact" />
-                    <p className="eyebrow light">contact</p>
-                    <h2 id="contact-title">
-                        Wanna
-                        <br />
-                        Contact me?
-                    </h2>
-                    <p className="contact-sub">
-                        Here ya go
-                    </p>
-                    <a className="btn btn-big" href="mailto:tristan.evans@bluewin.ch">
-                        tristan.evans@bluewin.ch <Arrow />
+                    <h2 id="contact-title">Get in touch</h2>
+                    <p>Want to work together or just say hi? My inbox is open.</p>
+                    <a className="btn btn-primary" href="mailto:tristan.evans@bluewin.ch">
+                        tristan.evans@bluewin.ch <ArrowIcon />
                     </a>
-                    <div className="social-links" aria-label="Social links">
+                    <div className="social">
                         <a
                             href="https://www.linkedin.com/in/tristan-evans-862b84222"
                             target="_blank"
                             rel="noreferrer"
                         >
-                            linkedin ↗
+                            LinkedIn
                         </a>
-                        <a
-                            href="https://github.com/InsightfulGuy"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            github ↗
+                        <a href="https://github.com/InsightfulGuy" target="_blank" rel="noreferrer">
+                            GitHub
                         </a>
                     </div>
                 </section>
             </main>
 
-            <footer>
-                <span>© {year} tristan</span>
-                <span>built with react</span>
-                <a href="#top">back to top ↑</a>
+            <ProjectModal project={openProject} onClose={close} />
+
+            <footer className="container footer">
+                <span>© {year} Tristan Evans</span>
+                <span>Built with React + Vite</span>
             </footer>
-        </div>
+        </>
     )
 }
 
