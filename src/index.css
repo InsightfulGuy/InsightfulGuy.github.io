@@ -737,8 +737,20 @@ body:has(.modal[open]) {
         padding: 0 24px 24px;
     }
 
+    .topbar nav,
+    .topbar-right {
+        gap: 14px;
+    }
+
+    .topbar nav a {
+        font-size: 13px;
+    }
+}
+
+/* Very narrow phones: the page is short enough to scroll, keep only the language switch. */
+@media (max-width: 480px) {
     .topbar nav {
-        gap: 16px;
+        display: none;
     }
 }
 
