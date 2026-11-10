@@ -1,29 +1,8 @@
-import { useEffect, useState } from "react"
-import GitHubRepos from "./GitHubRepos"
-import ProjectModal from "./ProjectModal"
-import { projects } from "./projects"
+import { useEffect } from "react"
+import Home from "./Home"
+import ProjectPage from "./ProjectPage"
 import { LANGS, useLang } from "./i18n"
-import RichText from "./RichText"
-import Mascot from "./Mascot"
-import { skillGroups } from "./skills"
-
-const featured = projects.find((p) => p.featured)
-const others = projects.filter((p) => p !== featured)
-
-const ArrowIcon = () => (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className="icon">
-        <path d="M5 12h14M13 6l6 6-6 6" />
-    </svg>
-)
-
-// The open project is kept in the URL (#project=<id>) so it can be linked
-// to directly and the browser back button closes it.
-const HASH_PREFIX = "#project="
-
-function projectIdFromHash() {
-    const hash = window.location.hash
-    return hash.startsWith(HASH_PREFIX) ? decodeURIComponent(hash.slice(HASH_PREFIX.length)) : null
-}
+import { useRoute } from "./router"
 
 function LangSwitch() {
     const { lang, setLang, t } = useLang()
@@ -45,44 +24,45 @@ function LangSwitch() {
 }
 
 function App() {
-    const { t, tx } = useLang()
+    const { t } = useLang()
+    const route = useRoute()
     const year = new Date().getFullYear()
-    const [openId, setOpenId] = useState(projectIdFromHash)
-    const openProject = projects.find((p) => p.id === openId) ?? null
+    const projectId = route.name === "project" ? route.id : null
 
+    // New project page: start at the top.
     useEffect(() => {
-        const onHash = () => setOpenId(projectIdFromHash())
-        window.addEventListener("hashchange", onHash)
-        return () => window.removeEventListener("hashchange", onHash)
-    }, [])
-
-    const open = (id: string) => {
-        window.location.hash = `project=${encodeURIComponent(id)}`
-    }
-
-    const close = () => {
-        if (projectIdFromHash()) {
-            history.replaceState(null, "", window.location.pathname + window.location.search)
-        }
-        setOpenId(null)
-    }
+        if (projectId) window.scrollTo(0, 0)
+    }, [projectId])
 
     return (
         <>
-            <a className="skip-link" href="#main">
+            {/* Focuses the content without changing the URL (the URL is used for routing). */}
+            <a
+                className="skip-link"
+                href="#main"
+                onClick={(e) => {
+                    e.preventDefault()
+                    document.getElementById("main")?.focus()
+                }}
+            >
                 {t("skip")}
             </a>
 
             <header className="topbar">
                 <div className="container topbar-inner">
-                    <a className="brand" href="#top" aria-label={t("backToTop")}>
-                        <Mascot />
+                    <a className="brand" href="#/" aria-label={t("homeLink")}>
+                        <img
+                            className="mascot"
+                            src="/head-icon.png"
+                            alt=""
+                            width="102"
+                            height="102"
+                        />
                     </a>
                     <div className="topbar-right">
                         <nav aria-label={t("navLabel")}>
+                            <a href="#work">{t("navWork")}</a>
                             <a href="#about">{t("navAbout")}</a>
-                            <a href="#skills">{t("navSkills")}</a>
-                            <a href="#projects">{t("navProjects")}</a>
                             <a href="#contact">{t("navContact")}</a>
                         </nav>
                         <LangSwitch />
@@ -90,158 +70,11 @@ function App() {
                 </div>
             </header>
 
-            <main id="main">
-                <section className="hero container" id="top">
-                    <div className="hero-text">
-                        <p className="kicker">{t("kicker")}</p>
-                        <h1>
-                            {t("heroHi")}
-                            <span className="accent">.</span>
-                        </h1>
-                        <p className="lead">
-                            <RichText text={t("heroLead")} />
-                        </p>
-                        <div className="actions">
-                            <a className="btn btn-primary" href="#projects">
-                                {t("viewProjects")} <ArrowIcon />
-                            </a>
-                            <a
-                                className="btn btn-ghost"
-                                href="https://github.com/InsightfulGuy"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                GitHub
-                            </a>
-                        </div>
-                    </div>
-                    <img
-                        className="avatar"
-                        src="/pfp-neil.jpg"
-                        alt={t("avatarAlt")}
-                        width="160"
-                        height="160"
-                    />
-                </section>
-
-                <section className="section container" id="about" aria-labelledby="about-title">
-                    <h2 id="about-title">{t("aboutTitle")}</h2>
-                    <p className="about-text">
-                        <RichText text={t("aboutText")} />
-                    </p>
-                </section>
-
-                <section className="section container" id="skills" aria-labelledby="skills-title">
-                    <h2 id="skills-title">{t("skillsTitle")}</h2>
-                    <div className="skill-grid">
-                        {skillGroups.map((g, i) => (
-                            <div
-                                className={`skill-group${g.learning ? " learning" : ""}`}
-                                key={i}
-                            >
-                                <h3>{tx(g.title)}</h3>
-                                <ul>
-                                    {g.items.map((item) => (
-                                        <li className="tag" key={item}>
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                <section
-                    className="section container"
-                    id="projects"
-                    aria-labelledby="projects-title"
-                >
-                    <h2 id="projects-title">{t("projectsTitle")}</h2>
-
-                    {featured && (
-                        <article className="card featured clickable">
-                            {featured.cover && (
-                                <div className="featured-media">
-                                    <img src={featured.cover} alt="" />
-                                </div>
-                            )}
-                            <div className="featured-body">
-                                <p className="card-type">{tx(featured.type)}</p>
-                                <h3>
-                                    <button className="card-link" onClick={() => open(featured.id)}>
-                                        {tx(featured.title)}
-                                    </button>
-                                </h3>
-                                <p>
-                                    <RichText text={tx(featured.summary)} />
-                                </p>
-                                <div className="card-foot">
-                                    {featured.status && (
-                                        <span className="status">{tx(featured.status)}</span>
-                                    )}
-                                    <span className="details-hint" aria-hidden="true">
-                                        {t("details")} <ArrowIcon />
-                                    </span>
-                                </div>
-                            </div>
-                        </article>
-                    )}
-
-                    <div className="card-grid">
-                        {others.map((p) => (
-                            <article className="card clickable" key={p.id}>
-                                <p className="card-type">{tx(p.type)}</p>
-                                <h3>
-                                    <button className="card-link" onClick={() => open(p.id)}>
-                                        {tx(p.title)}
-                                    </button>
-                                </h3>
-                                <p>
-                                    <RichText text={tx(p.summary)} />
-                                </p>
-                                <div className="card-foot">
-                                    {p.status && <span className="status">{tx(p.status)}</span>}
-                                    <span className="details-hint" aria-hidden="true">
-                                        {t("details")} <ArrowIcon />
-                                    </span>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-
-                    <h3 className="subheading">{t("onGithub")}</h3>
-                    <GitHubRepos />
-                </section>
-
-                <section
-                    className="section container contact"
-                    id="contact"
-                    aria-labelledby="contact-title"
-                >
-                    <h2 id="contact-title">{t("contactTitle")}</h2>
-                    <p>
-                        <RichText text={t("contactText")} />
-                    </p>
-                    <a className="btn btn-primary" href="mailto:tristan.evans@bluewin.ch">
-                        tristan.evans@bluewin.ch <ArrowIcon />
-                    </a>
-                    <div className="social">
-                        <a
-                            href="https://www.linkedin.com/in/tristan-evans-862b84222"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            LinkedIn
-                        </a>
-                        <a href="https://github.com/InsightfulGuy" target="_blank" rel="noreferrer">
-                            GitHub
-                        </a>
-                    </div>
-                </section>
-            </main>
-
-            <ProjectModal project={openProject} onClose={close} />
+            {route.name === "project" ? (
+                <ProjectPage id={route.id} />
+            ) : (
+                <Home anchor={route.anchor} />
+            )}
 
             <footer className="container footer">
                 <span>© {year} Tristan Evans</span>

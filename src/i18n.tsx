@@ -16,36 +16,49 @@ export function pick(text: Localized, lang: Lang): string {
 /* ---------- interface text ---------- */
 
 const en = {
+    pageTitle: "Tristan Evans · Portfolio",
     skip: "Skip to content",
     navLabel: "Main navigation",
-    backToTop: "Back to top",
+    homeLink: "Tristan Evans, home",
     langLabel: "Language",
+    navWork: "Work",
     navAbout: "About",
-    navSkills: "Skills",
-    navProjects: "Projects",
     navContact: "Contact",
 
     kicker: "Apprentice application developer",
     heroHi: "Hi, I'm Tristan",
     heroLead:
         "I do programming tasks/study during the week and games + music in my free time. Currently doing my apprenticeship at [Worldline Schweiz AG](https://worldline.com/en-ch/home) and my Berufsschule at [TBZ](https://tbz.ch/).",
-    viewProjects: "View projects",
-    avatarAlt: "Sketch of Kettlehead, the knight from my game",
+    heroDesignIntro:
+        "I’m Tristan, an application developer in training. Outside of work I make pixel-art games, record music and draw in a messy zine/collage style. What interests me most is the moment where code, image and sound meet the person using them.",
+    viewWork: "View work",
+    avatarAlt: "Profile picture: cartoon character with round glasses and a dark T-shirt",
+
+    workTitle: "Work",
+    statusWip: "Work in progress",
+    draft: "Draft · not on live site",
+
+    allWork: "All work",
+    moreWork: "More work",
+    previous: "Previous",
+    next: "Next",
+    notFound: "Project not found",
+    year: "Year",
+    role: "Role",
+    section_concept: "Concept",
+    section_process: "Process",
+    section_outcome: "Outcome",
+    section_reflection: "Reflection",
+    fullRes: "Full resolution ↗",
+    openImage: "Open image",
+    prevImage: "Previous image",
+    nextImage: "Next image",
 
     aboutTitle: "About",
     aboutText:
-        "I like building things that line up with my interests. At work that's web apps and backend code; at home it's pixel-art games, recording songs and whatever media I'm into at the moment :)",
+        "I like building things that line up with my interests. At work that's web apps and backend code; at home it's Indie Games, recording songs and whatever media I'm into at the moment :)",
     skillsTitle: "Skills",
-
-    projectsTitle: "Projects",
-    details: "Details",
-    onGithub: "On GitHub",
-    loadingRepos: "Loading repositories",
-    allRepos: "All repositories on GitHub →",
-    repository: "Repository",
-    noDescription: "No description yet.",
-    updated: "Updated",
-    liveDemo: "Live demo ↗",
+    githubLink: "More code on GitHub ↗",
 
     close: "Close",
     video: "Video",
@@ -58,36 +71,49 @@ const en = {
 type Dict = typeof en
 
 const de: Dict = {
+    pageTitle: "Tristan Evans · Portfolio",
     skip: "Zum Inhalt springen",
     navLabel: "Hauptnavigation",
-    backToTop: "Nach oben",
+    homeLink: "Tristan Evans, Startseite",
     langLabel: "Sprache",
+    navWork: "Arbeiten",
     navAbout: "Über mich",
-    navSkills: "Skills",
-    navProjects: "Projekte",
     navContact: "Kontakt",
 
     kicker: "Applikationsentwickler in Ausbildung",
     heroHi: "Hallo, ich bin Tristan",
     heroLead:
         "Unter der Woche entwickle ich Webanwendungen, in meiner Freizeit Games und Musik. Zurzeit mache ich meine Lehre bei der [Worldline Schweiz AG](https://worldline.com/en-ch/home) und die Berufsschule an der [TBZ Zürich](https://tbz.ch/).",
-    viewProjects: "Projekte ansehen",
-    avatarAlt: "Skizze von Kettlehead, dem Ritter aus meinem Game",
+    heroDesignIntro:
+        "Ich bin Tristan, angehender Applikationsentwickler. Neben der Arbeit mache ich Pixel-Art-Games, nehme Musik auf und zeichne im Zine- und Collage-Stil. Am meisten interessiert mich der Moment, in dem Code, Bild und Ton auf die Person treffen, die sie benutzt.",
+    viewWork: "Arbeiten ansehen",
+    avatarAlt: "Profilbild: Cartoonfigur mit runder Brille und dunklem T-Shirt",
+
+    workTitle: "Arbeiten",
+    statusWip: "In Arbeit",
+    draft: "Entwurf · nicht live",
+
+    allWork: "Alle Arbeiten",
+    moreWork: "Weitere Arbeiten",
+    previous: "Vorherige",
+    next: "Nächste",
+    notFound: "Projekt nicht gefunden",
+    year: "Jahr",
+    role: "Rolle",
+    section_concept: "Konzept",
+    section_process: "Prozess",
+    section_outcome: "Ergebnis",
+    section_reflection: "Reflexion",
+    fullRes: "Volle Auflösung ↗",
+    openImage: "Bild öffnen",
+    prevImage: "Vorheriges Bild",
+    nextImage: "Nächstes Bild",
 
     aboutTitle: "Über mich",
     aboutText:
-        "Ich baue gerne Dinge, die zu meinen Interessen passen. Bei der Arbeit sind das Webanwendungen und Backend-Code, zu Hause Pixel-Art-Games, eigene Songs und das Medienprojekt, das mich gerade begeistert.",
+        "Ich baue gerne Dinge, die zu meinen Interessen passen. Bei der Arbeit sind das Webanwendungen und Backend-Code, zu Hause Indie Games, eigene Songs und das Medienprojekt, das mich gerade begeistert.",
     skillsTitle: "Skills",
-
-    projectsTitle: "Projekte",
-    details: "Details",
-    onGithub: "Auf GitHub",
-    loadingRepos: "Repositories werden geladen",
-    allRepos: "Alle Repositories auf GitHub →",
-    repository: "Repository",
-    noDescription: "Noch keine Beschreibung.",
-    updated: "Aktualisiert",
-    liveDemo: "Live-Demo ↗",
+    githubLink: "Mehr Code auf GitHub ↗",
 
     close: "Schliessen",
     video: "Video",

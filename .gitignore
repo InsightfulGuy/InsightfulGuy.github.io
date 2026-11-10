@@ -4,6 +4,9 @@ node_modules/
 # build output
 dist/
 
+# local-only files, kept out of the public repo
+archive/
+
 # IDE / editor
 .idea/
 .vscode/
