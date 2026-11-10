@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import type { Project, Section } from "./content/types"
 import { projects } from "./content"
-import { isTodo, sectionHasContent, visibleTexts, SHOW_TODOS } from "./content/todo"
 import { useLang } from "./i18n"
 import { MediaList } from "./Media"
 import Gallery from "./Gallery"
@@ -12,7 +11,7 @@ export function Paragraphs({ texts }: { texts: string[] }) {
     return (
         <>
             {texts.map((text, i) => (
-                <p key={i} className={isTodo(text) ? "todo" : undefined}>
+                <p key={i}>
                     <RichText text={text} />
                 </p>
             ))}
@@ -30,14 +29,10 @@ const SECTIONS = ["concept", "process", "outcome", "reflection"] as const
 
 function ProjectSection({ id, section }: { id: (typeof SECTIONS)[number]; section?: Section }) {
     const { lang, t } = useLang()
-    if (!sectionHasContent(section, lang)) return null
     const titleKey = `section_${id}` as const
     return (
         <section className="project-section" aria-labelledby={`sec-${id}`}>
             <h2 id={`sec-${id}`}>{t(titleKey)}</h2>
-            <div className="prose">
-                <Paragraphs texts={visibleTexts(section?.text, lang)} />
-            </div>
             <MediaList items={section?.media} />
         </section>
     )
@@ -67,7 +62,6 @@ export default function ProjectPage({ id }: { id: string }) {
     const prev = projects[(index - 1 + projects.length) % projects.length]
     const next = projects[(index + 1) % projects.length]
     const summary = tx(project.summary)
-    const showSummary = SHOW_TODOS || !isTodo(summary)
 
     return (
         <main id="main" tabIndex={-1} className="container project-page">
@@ -80,12 +74,6 @@ export default function ProjectPage({ id }: { id: string }) {
                     {String(index + 1).padStart(2, "0")} · {tx(project.type)}
                 </p>
                 <h1 className="project-title">{tx(project.title)}</h1>
-                {showSummary && (
-                    <p className={`lead${isTodo(summary) ? " todo" : ""}`}>
-                        <RichText text={summary} />
-                    </p>
-                )}
-
                 <dl className="project-meta">
                     {project.year && (
                         <div>
@@ -127,9 +115,7 @@ export default function ProjectPage({ id }: { id: string }) {
                 <section className="project-section" aria-label={tx(project.title)}>
                     {project.gallery && project.gallery.length > 0 ? (
                         <Gallery images={project.gallery} />
-                    ) : (
-                        SHOW_TODOS && <p className="todo">TODO: add images to `gallery` in src/content/projects/{project.id}.ts</p>
-                    )}
+                    ) : null}
                 </section>
             )}
 

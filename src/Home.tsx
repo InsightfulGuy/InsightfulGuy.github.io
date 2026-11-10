@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import { projects } from "./content"
-import { isTodo, SHOW_TODOS } from "./content/todo"
 import { useLang } from "./i18n"
 import RichText from "./RichText"
 import { StatusLabel } from "./ProjectPage"
@@ -45,11 +44,6 @@ function WorkGrid() {
                                     {number} · {tx(p.type)}
                                 </p>
                                 <h3>{tx(p.title)}</h3>
-                                {(SHOW_TODOS || !isTodo(summary)) && (
-                                    <p className={`work-summary${isTodo(summary) ? " todo" : ""}`}>
-                                        {summary}
-                                    </p>
-                                )}
                                 <div className="work-foot">
                                     <StatusLabel status={p.status} />
                                     {p.draft && <span className="status draft">{t("draft")}</span>}
@@ -89,11 +83,6 @@ export default function Home({ anchor }: { anchor?: string }) {
                     <p className="lead">
                         <RichText text={t("heroLead")} />
                     </p>
-                    {(SHOW_TODOS || !isTodo(designIntro)) && (
-                        <p className={`lead${isTodo(designIntro) ? " todo" : ""}`}>
-                            <RichText text={designIntro} />
-                        </p>
-                    )}
                     <div className="actions">
                         <a className="btn btn-primary" href="#work">
                             {t("viewWork")} <ArrowIcon />
