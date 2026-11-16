@@ -91,7 +91,7 @@ export default function Home({ anchor }: { anchor?: string }) {
                 </div>
                 <img
                     className="avatar"
-                    src="/pfp-neil.jpg"
+                    src="/pfp.png"
                     alt={t("avatarAlt")}
                     width="160"
                     height="160"

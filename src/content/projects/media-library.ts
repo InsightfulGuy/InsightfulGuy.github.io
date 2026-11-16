@@ -1,14 +1,18 @@
 import type { Project } from "../types"
 
 // Media for this project goes in public/work/media-library/
+// The browser version of the BPM extractor lives in public/work/media-library/app/index.html
 const mediaLibrary: Project = {
     id: "media-library",
-    title: "Media_library",
+    title: "My personal Media Library",
     type: { en: "Software · Python", de: "Software · Python" },
     summary:
-        "Media Library which displays and retrieves Metadata and has a built in BPM Extractor (Beats per minute) for songs",
+        "Media Library which displays, plays and retrieves Metadata and has a built in BPM Extractor (Beats per minute) for songs",
     tags: ["Python"],
-    links: [{ label: "GitHub", url: "https://github.com/InsightfulGuy/Media_library" }],
+    links: [
+        { label: "GitHub", url: "https://github.com/InsightfulGuy/Media_library" },
+        { label: { en: "Open BPM Webpage-Version Extractor", de: "BPM-Extractor Web-Version öffnen" }, url: "/work/media-library/app/index.html" },
+    ],
 
     concept: {
         text: [
@@ -27,7 +31,18 @@ const mediaLibrary: Project = {
 
     outcome: {
         text: [
-            "TODO: Add screenshots or a short screen recording (media type \"video\") of the app in use.",
+            {
+                en: "A simple version that runs right in the browser: drop in some songs (or hit “Try demo loops”) and it finds the BPM. Nothing gets uploaded, everything stays on your device.",
+                de: "Eine einfache Version, die direkt im Browser läuft: Zieh ein paar Songs rein (oder klick auf «Demo-Loops testen») und sie findet das BPM. Nichts wird hochgeladen, alles bleibt auf deinem Gerät.",
+            },
+        ],
+        media: [
+            {
+                type: "embed",
+                src: "/work/media-library/app/index.html",
+                title: { en: "BPM Extractor, browser version", de: "BPM-Finder, Browser-Version" },
+                aspectRatio: "16 / 10",
+            },
         ],
     },
 

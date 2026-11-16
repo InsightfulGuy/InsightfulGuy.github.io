@@ -6,7 +6,7 @@ const album: Project = {
     title: { en: "In-Depth Project Music-Album", de: "Album zur Vertiefungsarbeit" },
     type: { en: "Music", de: "Musik" },
     summary: {
-        en: "A rock album for my Vertiefungsarbeit for my Final Grade in my Apprenticeship. It's about the struggles and worries of Gen Z people.",
+        en: "A rock album for my Vertiefungsarbeit for my Final Grade in my Apprenticeship. It's about the struggles and worries of Gen Z.",
         de: "Ein Rockalbum über die Sorgen und Kämpfe der Gen Z. Es entsteht als meine Vertiefungsarbeit, die Teil meines Lehrabschlusses ist.",
     },
     status: "wip",
@@ -16,26 +16,24 @@ const album: Project = {
     concept: {
         text: [
             {
-                en: "This Project is about the creation of a music album for my Vertiefungsarbeit (final project) in my apprenticeship. The album is about the struggles and worries of Gen Z.",
+                en: "The album lyrics are being written with the help of a Google Form, where I asked/posted an anonymous forum for people to share their worries and struggles. I am currently using these lyrics as guideline for the songs.",
+                de: "Die Songtexte für das Album entstehen mithilfe eines Google-Formulars, in dem ich in einem anonymen Forum darum gebeten habe, dass die Teilnehmer ihre Sorgen und Probleme mitteilen. Diese Texte diene mir derzeit als Grundlage für die Songs."
             },
-            "TODO: A rock album about what my generation worries about: [2–3 concrete themes, e.g. future, pressure, being online all the time].",
-            "TODO: I chose rock because [reason].",
-            "TODO: An album instead of single songs, because [it lets the songs tell one story together / reason].",
         ],
     },
 
     process: {
         text: [
-            "TODO: How do you write and record the songs? Add demos (media type \"audio\"), lyric sketches or photos of the setup.",
+            "",
         ],
     },
 
     outcome: {
-        text: ["TODO: Add finished tracks (media type \"audio\") or a video when they're ready."],
+        text: ["Placeholder for results"],
     },
 
     reflection: {
-        text: ["TODO: What did you learn? What would you do differently?"],
+        text: [""],
     },
 }
 

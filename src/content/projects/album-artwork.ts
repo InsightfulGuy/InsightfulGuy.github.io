@@ -19,7 +19,6 @@ const albumArtwork: Project = {
                 en: "When the Album is finished, I might also wan't to make cover art, to improve my designing skills.",
                 de: "Wenn das Album fertig ist, kann es sein dass ich noch ein Cover-Art für es mache, um meine Design-Skills zu verbessern.",
             },
-            "TODO",
             {
                 en: "It uses the same zine/collage style as my drawings, so the music and the visuals feel like one project.",
                 de: "Es nutzt denselben Zine- und Collage-Stil wie meine Zeichnungen, damit Musik und Visuals wie ein gemeinsames Projekt wirken.",
@@ -29,16 +28,16 @@ const albumArtwork: Project = {
 
     process: {
         text: [
-            "TODO: Add sketches, moodboards, drafts and storyboards for the music video, and explain the decisions between them.",
+            "sketches, moodboards, drafts and storyboards for the music video",
         ],
     },
 
     outcome: {
-        text: ["TODO: Add the final cover and/or the music video."],
+        text: ["Cover art still TBD"],
     },
 
     reflection: {
-        text: ["TODO: What did you learn? What would you do differently?"],
+        text: [""],
     },
 }
 

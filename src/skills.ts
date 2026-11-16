@@ -20,8 +20,8 @@ export const skillGroups: SkillGroup[] = [
         items: ["AWS", "Docker", "Jenkins", "Grafana", "Prometheus", "MongoDB", "MySQL"],
     },
     {
-        title: "Tools",
-        items: ["Figma", "Adobe Photoshop"],
+        title: "Designing Tools",
+        items: ["Figma", "Adobe Photoshop", "Gimp"],
     },
     {
         title: { en: "Currently learning", de: "Lerne gerade" },

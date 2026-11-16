@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BPM Extractor · Tristan Evans</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* Same band-shirt look as the portfolio: black shirt, cream ink, a bit of red. */
+        :root {
+            --bg: #0c0c0c;
+            --surface: #141414;
+            --text: #ece8df;
+            --muted: #9b978f;
+            --border: #3a3a3a;
+            --ink-line: #ece8df;
+            --red: #e3241c;
+            --paper: #1b1b1b;
+            --display: 'Anton', Impact, 'Arial Narrow', sans-serif;
+            --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f3f1ec;
+                --surface: #ffffff;
+                --text: #111111;
+                --muted: #55524d;
+                --border: #cfcbc2;
+                --ink-line: #111111;
+                --red: #c8102e;
+                --paper: #e7e3da;
+            }
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        button, select { font: inherit; color: inherit; }
+        :focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+        .app { margin: 0 auto; max-width: 820px; padding: 20px; }
+
+        .head h1 {
+            font-family: var(--display);
+            font-size: clamp(30px, 6vw, 44px);
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            line-height: 1;
+            margin: 0 0 8px;
+            text-transform: uppercase;
+        }
+        .head h1 .star { color: var(--red); font-size: 0.6em; vertical-align: 0.25em; }
+        .sub { color: var(--muted); font-size: 14px; margin: 0 0 18px; max-width: 34rem; }
+
+        .label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        /* drop zone */
+        .drop {
+            align-items: center;
+            border: 2px dashed var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 28px 16px;
+            text-align: center;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .drop.over { background: var(--surface); border-color: var(--ink-line); }
+        .drop-title {
+            font-family: var(--display);
+            font-size: 26px;
+            letter-spacing: 0.05em;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .drop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .hint { color: var(--muted); margin: 0; }
+
+        .btn {
+            background: transparent;
+            border: 2px solid var(--ink-line);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            padding: 9px 18px;
+            text-transform: uppercase;
+            transition: background 0.15s, color 0.15s;
+        }
+        .btn:hover, .btn-solid { background: var(--text); color: var(--bg); }
+        .btn-solid:hover { background: var(--bg); color: var(--text); }
+
+        /* toolbar */
+        .bar {
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            margin-top: 22px;
+            padding-bottom: 10px;
+        }
+        .bar[hidden] { display: none; }
+        .bar .grow { flex: 1; }
+        .bar select {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            margin-left: 6px;
+            padding: 3px 6px;
+        }
+        .link {
+            background: none;
+            border: 0;
+            cursor: pointer;
+            padding: 0;
+        }
+        .link:hover { color: var(--text); }
+
+        /* list */
+        .list { list-style: none; margin: 0; padding: 0; }
+        .row {
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            display: grid;
+            gap: 14px;
+            grid-template-columns: 48px minmax(0, 1fr) auto 44px 40px;
+            padding: 12px 0;
+        }
+        .cover {
+            align-items: center;
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            display: flex;
+            height: 48px;
+            justify-content: center;
+            overflow: hidden;
+            width: 48px;
+        }
+        .cover img { height: 100%; object-fit: cover; width: 100%; }
+        .title, .artist { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .title { font-weight: 600; }
+        .artist { color: var(--muted); font-size: 13px; }
+
+        .bpm { align-items: center; display: flex; gap: 10px; justify-content: flex-end; }
+        .num {
+            font-family: var(--display);
+            font-size: 30px;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            min-width: 3.2ch;
+            text-align: right;
+        }
+        .unit { color: var(--muted); display: block; font-size: 10px; text-align: right; }
+        .fix button:hover { border-color: var(--ink-line); color: var(--text); }
+        .busy { color: var(--muted); font-size: 12px; font-style: italic; }
+        .err { color: var(--red); font-size: 12px; }
+
+        .dur { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; }
+        .play {
+            align-items: center;
+            background: none;
+            border: 2px solid var(--ink-line);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            height: 38px;
+            justify-content: center;
+            padding: 0;
+            width: 38px;
+        }
+        .play svg { fill: currentColor; height: 14px; width: 14px; }
+        .play:hover, .row.playing .play { background: var(--text); color: var(--bg); }
+        .row.playing .title::before { color: var(--red); content: '★ '; }
+
+        .privacy { color: var(--muted); font-size: 12px; margin: 18px 0 0; }
+
+        @media (max-width: 520px) {
+            .app { padding: 14px; }
+            .row { gap: 10px; grid-template-columns: 40px minmax(0, 1fr) auto 36px; }
+            .cover { height: 40px; width: 40px; }
+            .dur { display: none; }
+            .num { font-size: 24px; }
+            .play { height: 34px; width: 34px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; }
+        }
+        .sr-only {
+            clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden;
+            position: absolute; white-space: nowrap; width: 1px;
+        }
+    </style>
+</head>
+<body>
+<main class="app">
+    <header class="head">
+        <h1><span class="star" aria-hidden="true">★</span> <span data-t="title"></span></h1>
+        <p class="sub" data-t="sub"></p>
+    </header>
+
+    <section class="drop" id="drop">
+        <p class="drop-title" data-t="drop"></p>
+        <div class="drop-actions">
+            <button class="btn btn-solid" id="pick" type="button" data-t="pick"></button>
+            <button class="btn" id="demo" type="button" data-t="demo"></button>
+        </div>
+        <p class="hint label" data-t="hint"></p>
+        <input type="file" id="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac,.ogg" multiple hidden />
+    </section>
+
+    <div class="bar label" id="bar" hidden>
+        <span id="count"></span>
+        <span class="grow"></span>
+        <label><span data-t="sort"></span>
+            <select id="sort">
+                <option value="bpm" data-t="sortBpm"></option>
+                <option value="added" data-t="sortAdded"></option>
+            </select>
+        </label>
+        <button class="link label" id="clear" type="button" data-t="clear"></button>
+    </div>
+
+    <ol class="list" id="list"></ol>
+    <p class="sr-only" id="status" aria-live="polite"></p>
+    <p class="privacy" data-t="privacy"></p>
+    <audio id="player" preload="none"></audio>
+</main>
+
+<script>
+    'use strict'
+
+    /* ------------------------------------------------------------------ */
+    /* Texts (follows the language picked on the portfolio)               */
+    /* ------------------------------------------------------------------ */
+
+    const TEXT = {
+        en: {
+            title: 'BPM Extractor',
+            sub: 'Drop in some songs and find out their tempo. Handy for picking practice songs for drums.',
+            drop: 'Drop songs here',
+            pick: 'Pick files',
+            demo: 'Try demo loops',
+            hint: 'MP3 · WAV · M4A · OGG · works best with drums',
+            sort: 'Sort',
+            sortBpm: 'by BPM',
+            sortAdded: 'as added',
+            clear: 'Clear',
+            privacy: 'Nothing gets uploaded. Your files stay on your device, everything runs in the browser.',
+            busy: 'finding the beat…',
+            error: "couldn't read this file",
+            songs: (n) => `${n} ${n === 1 ? 'song' : 'songs'}`,
+            play: 'Play',
+            pause: 'Pause',
+            half: 'Half tempo',
+            double: 'Double tempo',
+            unknown: 'Unknown artist',
+            demoArtist: 'Demo drum loop, generated in your browser',
+            done: (t, bpm) => `${t}: ${bpm} BPM`,
+        },
+        de: {
+            title: 'BPM-Extractor',
+            sub: 'Zieh ein paar Songs rein und finde ihr Tempo heraus. Praktisch, um Songs zum Schlagzeug-Üben zu finden.',
+            drop: 'Songs hier reinziehen',
+            pick: 'Dateien wählen',
+            demo: 'Demo-Loops testen',
+            hint: 'MP3 · WAV · M4A · OGG · klappt am besten mit Drums',
+            sort: 'Sortieren',
+            sortBpm: 'nach BPM',
+            sortAdded: 'wie hinzugefügt',
+            clear: 'Leeren',
+            privacy: 'Nichts wird hochgeladen. Deine Dateien bleiben auf deinem Gerät, alles läuft im Browser.',
+            busy: 'suche den Beat…',
+            error: 'Datei konnte nicht gelesen werden',
+            songs: (n) => `${n} ${n === 1 ? 'Song' : 'Songs'}`,
+            play: 'Abspielen',
+            pause: 'Pause',
+            half: 'Halbes Tempo',
+            double: 'Doppeltes Tempo',
+            unknown: 'Unbekannt',
+            demoArtist: 'Demo-Drumloop, im Browser generiert',
+            done: (t, bpm) => `${t}: ${bpm} BPM`,
+        },
+    }
+
+    function currentLang() {
+        try {
+            const saved = localStorage.getItem('lang')
+            if (saved === 'en' || saved === 'de') return saved
+        } catch (e) { /* storage blocked */ }
+        return (navigator.language || '').toLowerCase().startsWith('de') ? 'de' : 'en'
+    }
+    let lang = currentLang()
+    const t = (key) => TEXT[lang][key]
+
+    function applyTexts() {
+        document.documentElement.lang = lang
+        for (const el of document.querySelectorAll('[data-t]')) el.textContent = t(el.dataset.t)
+        render()
+    }
+    // The portfolio's EN/DE switch writes to localStorage → this fires inside the iframe too.
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'lang') { lang = currentLang(); applyTexts() }
+    })
+
+    /* ------------------------------------------------------------------ */
+    /* State + list                                                       */
+    /* ------------------------------------------------------------------ */
+
+    const tracks = [] // { id, title, artist, cover, url, bpm, firstBeat, duration, state }
+    let nextId = 1
+    let playingId = null
+
+    const $ = (id) => document.getElementById(id)
+    const list = $('list')
+    const player = $('player')
+
+    function el(tag, attrs = {}, ...children) {
+        const n = document.createElement(tag)
+        for (const [k, v] of Object.entries(attrs)) {
+            if (k === 'class') n.className = v
+            else if (k.startsWith('on')) n.addEventListener(k.slice(2), v)
+            else n.setAttribute(k, v)
+        }
+        for (const c of children) if (c != null) n.append(c)
+        return n
+    }
+
+    const ICON_PLAY = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9.5-5.5z"/></svg>'
+    const ICON_PAUSE = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 1.5h3.2v11H2.5zM8.3 1.5h3.2v11H8.3z"/></svg>'
+
+    function fmtTime(sec) {
+        if (!isFinite(sec)) return ''
+        const m = Math.floor(sec / 60)
+        const s = Math.round(sec % 60)
+        return `${m}:${String(s).padStart(2, '0')}`
+    }
+
+    function render() {
+        const sorted = [...tracks]
+        if ($('sort').value === 'bpm') sorted.sort((a, b) => (a.bpm ?? 9999) - (b.bpm ?? 9999))
+        list.replaceChildren(...sorted.map(rowFor))
+        $('bar').hidden = tracks.length === 0
+        $('count').textContent = t('songs')(tracks.length)
+    }
+
+    function rowFor(tr) {
+        const cover = el('div', { class: 'cover', 'aria-hidden': 'true' })
+        if (tr.cover) cover.append(el('img', { src: tr.cover, alt: '' }))
+        else cover.textContent = '★'
+
+        let bpmBox
+        if (tr.state === 'busy') bpmBox = el('span', { class: 'busy' }, t('busy'))
+        else if (tr.state === 'error') bpmBox = el('span', { class: 'err' }, t('error'))
+        else {
+            bpmBox = el('div', { class: 'bpm' },
+                el('div', {}, el('span', { class: 'num' }, String(Math.round(tr.bpm))), el('span', { class: 'unit label' }, 'BPM')),
+            )
+        }
+
+        const isPlaying = playingId === tr.id && !player.paused
+        const play = el('button', {
+            class: 'play',
+            type: 'button',
+            'aria-label': `${isPlaying ? t('pause') : t('play')}: ${tr.title}`,
+            onclick: () => togglePlay(tr),
+        })
+        play.innerHTML = isPlaying ? ICON_PAUSE : ICON_PLAY
+
+        return el('li', { class: 'row' + (isPlaying ? ' playing' : '') },
+            cover,
+            el('div', { class: 'meta' },
+                el('p', { class: 'title' }, tr.title),
+                el('p', { class: 'artist' }, tr.artist || t('unknown')),
+            ),
+            bpmBox,
+            el('span', { class: 'dur' }, fmtTime(tr.duration)),
+            play,
+        )
+    }
+
+    /** Detection sometimes lands on half or double the real tempo; let people fix it by ear. */
+    function fixTempo(tr, factor) {
+        const next = tr.bpm * factor
+        if (next < 30 || next > 400) return
+        tr.bpm = next
+        render()
+    }
+
+    function togglePlay(tr) {
+        if (playingId === tr.id && !player.paused) {
+            player.pause()
+        } else {
+            if (playingId !== tr.id) {
+                player.src = tr.url
+                playingId = tr.id
+            }
+            player.play().catch(() => {})
+        }
+    }
+    for (const ev of ['play', 'pause', 'ended']) player.addEventListener(ev, render)
+
+    /* ------------------------------------------------------------------ */
+    /* Adding files                                                       */
+    /* ------------------------------------------------------------------ */
+
+    const queue = []
+    let working = false
+
+    async function addFiles(files) {
+        for (const file of files) {
+            if (!file.type.startsWith('audio/') && !/\.(mp3|wav|m4a|aac|flac|ogg|oga|opus)$/i.test(file.name)) continue
+            const guess = guessFromName(file.name)
+            const tr = {
+                id: nextId++,
+                title: guess.title,
+                artist: guess.artist,
+                cover: null,
+                url: URL.createObjectURL(file),
+                bpm: null,
+                duration: NaN,
+                state: 'busy',
+                source: file,
+            }
+            tracks.push(tr)
+            queue.push(tr)
+        }
+        render()
+        work()
+    }
+
+    /** "Artist - Title.mp3" → { artist, title } */
+    function guessFromName(name) {
+        const base = name.replace(/\.[^.]+$/, '').replace(/_/g, ' ').trim()
+        const parts = base.split(/\s+-\s+/)
+        return parts.length >= 2 ? { artist: parts[0], title: parts.slice(1).join(' - ') } : { artist: '', title: base }
+    }
+
+    async function work() {
+        if (working) return
+        working = true
+        while (queue.length) {
+            const tr = queue.shift()
+            try {
+                const buf = tr.source instanceof ArrayBuffer ? tr.source : await tr.source.arrayBuffer()
+                const tags = readTags(buf)
+                if (tags.title) tr.title = tags.title
+                if (tags.artist) tr.artist = tags.artist
+                if (tags.cover) tr.cover = tags.cover
+                render()
+                await nextFrame()
+                const result = await detectBpm(buf)
+                Object.assign(tr, result, { state: 'done' })
+                $('status').textContent = t('done')(tr.title, Math.round(tr.bpm))
+            } catch (e) {
+                console.warn(e)
+                tr.state = 'error'
+            }
+            delete tr.source
+            render()
+        }
+        working = false
+    }
+
+    const nextFrame = () => new Promise((r) => setTimeout(r, 0))
+
+    // drag & drop anywhere on the page
+    const drop = $('drop')
+    let dragDepth = 0
+    document.addEventListener('dragenter', (e) => { e.preventDefault(); dragDepth++; drop.classList.add('over') })
+    document.addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDepth = 0; drop.classList.remove('over') } })
+    document.addEventListener('dragover', (e) => e.preventDefault())
+    document.addEventListener('drop', (e) => {
+        e.preventDefault()
+        dragDepth = 0
+        drop.classList.remove('over')
+        if (e.dataTransfer?.files?.length) addFiles([...e.dataTransfer.files])
+    })
+    $('pick').addEventListener('click', () => $('file').click())
+    $('file').addEventListener('change', (e) => { addFiles([...e.target.files]); e.target.value = '' })
+    $('sort').addEventListener('change', render)
+    $('clear').addEventListener('click', () => {
+        player.pause()
+        player.removeAttribute('src')
+        playingId = null
+        for (const tr of tracks) { URL.revokeObjectURL(tr.url); if (tr.cover) URL.revokeObjectURL(tr.cover) }
+        tracks.length = 0
+        queue.length = 0
+        render()
+    })
+
+    /* ------------------------------------------------------------------ */
+    /* Reading tags (ID3v2.3 / 2.4, the usual MP3 tags)                   */
+    /* ------------------------------------------------------------------ */
+
+    function readTags(buf) {
+        const b = new Uint8Array(buf)
+        const tags = {}
+        if (b.length < 10 || b[0] !== 0x49 || b[1] !== 0x44 || b[2] !== 0x33) return tags // "ID3"
+        const ver = b[3]
+        const flags = b[5]
+        if (ver < 3 || ver > 4 || flags & 0x80) return tags // old version or unsynchronised: skip
+        const syncsafe = (i) => ((b[i] & 0x7f) << 21) | ((b[i + 1] & 0x7f) << 14) | ((b[i + 2] & 0x7f) << 7) | (b[i + 3] & 0x7f)
+        const u32 = (i) => ((b[i] << 24) | (b[i + 1] << 16) | (b[i + 2] << 8) | b[i + 3]) >>> 0
+        const end = Math.min(10 + syncsafe(6), b.length)
+        let p = 10
+        if (flags & 0x40) p += ver === 4 ? syncsafe(p) : u32(p) + 4 // extended header
+
+        while (p + 10 <= end) {
+            const id = String.fromCharCode(b[p], b[p + 1], b[p + 2], b[p + 3])
+            if (!/^[A-Z0-9]{4}$/.test(id)) break // padding reached
+            const size = ver === 4 ? syncsafe(p + 4) : u32(p + 4)
+            const start = p + 10
+            const stop = start + size
+            if (size <= 0 || stop > end) break
+            const data = b.subarray(start, stop)
+            if (id === 'TIT2') tags.title = decodeText(data)
+            else if (id === 'TPE1') tags.artist = decodeText(data)
+            else if (id === 'TALB') tags.album = decodeText(data)
+            else if (id === 'APIC' && !tags.cover) tags.cover = readPicture(data)
+            p = stop
+        }
+        return tags
+    }
+
+    function decodeBytes(bytes, enc) {
+        if (enc === 0) return new TextDecoder('latin1').decode(bytes)
+        if (enc === 3) return new TextDecoder('utf-8').decode(bytes)
+        if (enc === 2) return new TextDecoder('utf-16be').decode(bytes)
+        // enc 1: UTF-16 with byte order mark
+        if (bytes[0] === 0xfe && bytes[1] === 0xff) return new TextDecoder('utf-16be').decode(bytes.subarray(2))
+        if (bytes[0] === 0xff && bytes[1] === 0xfe) return new TextDecoder('utf-16le').decode(bytes.subarray(2))
+        return new TextDecoder('utf-16le').decode(bytes)
+    }
+
+    function decodeText(data) {
+        return decodeBytes(data.subarray(1), data[0]).replace(/\0+$/, '').split('\0')[0].trim()
+    }
+
+    function readPicture(data) {
+        const enc = data[0]
+        let i = 1
+        let mime = ''
+        while (i < data.length && data[i] !== 0) mime += String.fromCharCode(data[i++])
+        i += 2 // null + picture type
+        if (enc === 1 || enc === 2) {
+            while (i + 1 < data.length && !(data[i] === 0 && data[i + 1] === 0)) i += 2
+            i += 2
+        } else {
+            while (i < data.length && data[i] !== 0) i++
+            i += 1
+        }
+        if (i >= data.length) return null
+        if (!mime.includes('/')) mime = 'image/' + (mime.toLowerCase() || 'jpeg').replace('jpg', 'jpeg')
+        return URL.createObjectURL(new Blob([data.subarray(i)], { type: mime }))
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* BPM detection — same idea as the Python version (librosa):         */
+    /* 1 load → 2 find the hits → 3 guess the tempo → 4 place the beats   */
+    /* → 5 exact BPM from a straight line through the beat times          */
+    /* ------------------------------------------------------------------ */
+
+    const SR = 11025 // low sample rate is plenty for finding drum hits
+    const FFT = 1024 // ~93 ms window
+    const HOP = 128 // ~11.6 ms between frames
+    const FPS = SR / HOP
+    const MAX_SECONDS = 120
+
+    async function detectBpm(arrayBuffer) {
+        // 1. Load: decode, mix to mono and resample in one go
+        const decoded = await new OfflineAudioContext(1, 1, 44100).decodeAudioData(arrayBuffer.slice(0))
+        const seconds = Math.min(decoded.duration, MAX_SECONDS)
+        const off = new OfflineAudioContext(1, Math.max(FFT * 2, Math.ceil(seconds * SR)), SR)
+        const src = off.createBufferSource()
+        src.buffer = decoded
+        src.connect(off.destination)
+        src.start(0)
+        const x = (await off.startRendering()).getChannelData(0)
+        await nextFrame()
+
+        // 2. Find the hits: how much louder each slice gets compared to the one before
+        const onset = onsetEnvelope(x)
+        await nextFrame()
+
+        // 3. Guess the tempo: at which gap do the hits repeat?
+        const period = estimatePeriod(onset) // in frames, with decimals
+
+        // 4. Place the beats on the hits that fit that tempo
+        const beats = trackBeats(onset, period)
+
+        // 5. Exact BPM: straight line through all beat times
+        let framesPerBeat = period
+        if (beats.length >= 4) framesPerBeat = slope(beats)
+        const toSeconds = (f) => (f * HOP + FFT / 2) / SR
+
+        return {
+            bpm: (60 * FPS) / framesPerBeat,
+            firstBeat: beats.length ? toSeconds(beats[0]) : 0,
+            duration: decoded.duration,
+        }
+    }
+
+    function onsetEnvelope(x) {
+        const frames = Math.max(1, Math.floor((x.length - FFT) / HOP) + 1)
+        const half = FFT / 2
+        const win = new Float32Array(FFT)
+        for (let i = 0; i < FFT; i++) win[i] = 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / FFT)
+        const re = new Float64Array(FFT)
+        const im = new Float64Array(FFT)
+        const prev = new Float64Array(half)
+        const out = new Float32Array(frames)
+        const fft = makeFFT(FFT)
+
+        for (let f = 0; f < frames; f++) {
+            const o = f * HOP
+            for (let i = 0; i < FFT; i++) { re[i] = x[o + i] * win[i]; im[i] = 0 }
+            fft(re, im)
+            let sum = 0
+            for (let k = 1; k < half; k++) {
+                const mag = Math.log1p(100 * Math.hypot(re[k], im[k])) // log = closer to how we hear
+                const diff = mag - prev[k]
+                if (diff > 0) sum += diff // only count things getting louder
+                prev[k] = mag
+            }
+            out[f] = f === 0 ? 0 : sum
+        }
+
+        // remove the slow "overall loudness" part, keep the spikes
+        const w = Math.round(FPS * 0.4)
+        const res = new Float32Array(frames)
+        let acc = 0
+        for (let i = 0; i < Math.min(frames, w); i++) acc += out[i]
+        for (let i = 0; i < frames; i++) {
+            const lo = i - w - 1
+            const hi = i + w
+            if (hi < frames && hi >= w) acc += out[hi]
+            if (lo >= 0) acc -= out[lo]
+            const n = Math.min(frames - 1, hi) - Math.max(0, lo + 1) + 1
+            res[i] = Math.max(0, out[i] - acc / n)
+        }
+        let mean = 0
+        for (const v of res) mean += v
+        mean /= frames || 1
+        let sd = 0
+        for (const v of res) sd += (v - mean) ** 2
+        sd = Math.sqrt(sd / (frames || 1)) || 1
+        for (let i = 0; i < frames; i++) res[i] /= sd
+        return res
+    }
+
+    function estimatePeriod(o) {
+        const minLag = Math.floor((60 * FPS) / 220)
+        const maxLag = Math.ceil((60 * FPS) / 50)
+        const n = o.length
+        // autocorrelation: how well do the hits line up with themselves shifted by `lag` frames?
+        const ac = new Float64Array(maxLag * 2 + 2)
+        for (let lag = 1; lag < ac.length && lag < n; lag++) {
+            let s = 0
+            for (let i = 0; i + lag < n; i++) s += o[i] * o[i + lag]
+            ac[lag] = s / (n - lag)
+        }
+        const at = (x) => { const i = Math.floor(x), f = x - i; return (ac[i] || 0) * (1 - f) + (ac[i + 1] || 0) * f }
+        // Score each gap: its own repeat + the double gap (the bar) + the half gap (8th notes).
+        // Checking the half gap stops it from locking onto 3:2 rhythms (146 → 97).
+        // Then lean a bit towards ~120 BPM, where most songs are.
+        const score = new Float64Array(maxLag + 2)
+        let best = minLag
+        for (let lag = minLag; lag <= maxLag; lag++) {
+            const bpm = (60 * FPS) / lag
+            const prior = Math.exp(-0.5 * Math.log2(bpm / 120) ** 2)
+            score[lag] = (at(lag) + 0.5 * at(2 * lag) + 0.5 * at(lag / 2)) * prior
+            if (score[lag] > score[best]) best = lag
+        }
+        return best + peakOffset(score[best - 1], score[best], score[best + 1])
+    }
+
+    function trackBeats(o, period) {
+        const n = o.length
+        // where does the beat grid line up best with the hits?
+        let bestPhase = 0
+        let bestSum = -1
+        for (let phase = 0; phase < period; phase++) {
+            let s = 0
+            for (let f = phase; f < n; f += period) s += o[Math.round(f)] || 0
+            if (s > bestSum) { bestSum = s; bestPhase = phase }
+        }
+        // walk along the song, snapping each beat to the strongest hit nearby
+        const beats = []
+        const reach = Math.max(2, Math.round(period * 0.12))
+        let expected = bestPhase
+        while (expected < n - 1) {
+            const c = Math.round(expected)
+            let j = c
+            for (let k = Math.max(1, c - reach); k <= Math.min(n - 2, c + reach); k++) if (o[k] > o[j]) j = k
+            if (o[j] > 0.5) {
+                const exact = j + peakOffset(o[j - 1], o[j], o[j + 1])
+                beats.push(exact)
+                expected = exact + period
+            } else {
+                expected += period // quiet bit, keep going on the grid
+            }
+        }
+        return beats
+    }
+
+    /** Slope of a straight line through (0, b0), (1, b1), … = frames per beat. */
+    function slope(beats) {
+        // use the beat number from the grid, so skipped quiet beats don't break the line
+        const first = beats[0]
+        const step = (beats[beats.length - 1] - first) / (beats.length - 1)
+        const idx = beats.map((b) => Math.round((b - first) / step))
+        const xm = idx.reduce((a, v) => a + v, 0) / idx.length
+        const ym = beats.reduce((a, v) => a + v, 0) / beats.length
+        let num = 0
+        let den = 0
+        for (let i = 0; i < beats.length; i++) {
+            num += (idx[i] - xm) * (beats[i] - ym)
+            den += (idx[i] - xm) ** 2
+        }
+        return den ? num / den : step
+    }
+
+    /** Sub-frame position of a peak from its two neighbours (parabola). */
+    function peakOffset(a, b, c) {
+        const d = a - 2 * b + c
+        if (!isFinite(d) || d === 0) return 0
+        return Math.max(-0.5, Math.min(0.5, (0.5 * (a - c)) / d))
+    }
+
+    /** Small in-place radix-2 FFT. */
+    function makeFFT(size) {
+        const levels = Math.log2(size)
+        const rev = new Uint32Array(size)
+        for (let i = 0; i < size; i++) {
+            let r = 0
+            for (let j = 0; j < levels; j++) r = (r << 1) | ((i >>> j) & 1)
+            rev[i] = r
+        }
+        const cos = new Float64Array(size / 2)
+        const sin = new Float64Array(size / 2)
+        for (let i = 0; i < size / 2; i++) {
+            cos[i] = Math.cos((2 * Math.PI * i) / size)
+            sin[i] = Math.sin((2 * Math.PI * i) / size)
+        }
+        return (re, im) => {
+            for (let i = 0; i < size; i++) {
+                const j = rev[i]
+                if (j > i) {
+                    let tmp = re[i]; re[i] = re[j]; re[j] = tmp
+                    tmp = im[i]; im[i] = im[j]; im[j] = tmp
+                }
+            }
+            for (let len = 2; len <= size; len <<= 1) {
+                const halfLen = len >> 1
+                const step = size / len
+                for (let i = 0; i < size; i += len) {
+                    for (let j = 0; j < halfLen; j++) {
+                        const k = j * step
+                        const tre = re[i + j + halfLen] * cos[k] + im[i + j + halfLen] * sin[k]
+                        const tim = -re[i + j + halfLen] * sin[k] + im[i + j + halfLen] * cos[k]
+                        re[i + j + halfLen] = re[i + j] - tre
+                        im[i + j + halfLen] = im[i + j] - tim
+                        re[i + j] += tre
+                        im[i + j] += tim
+                    }
+                }
+            }
+        }
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Demo loops: drum patterns generated right here, so anyone can try quickly */
+
+    async function makeLoop(bpm, seconds = 16) {
+        const rate = 44100
+        const ctx = new OfflineAudioContext(1, rate * seconds, rate)
+        const noise = ctx.createBuffer(1, rate, rate)
+        const nd = noise.getChannelData(0)
+        for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1
+
+        const hit = (time, kind) => {
+            const g = ctx.createGain()
+            g.connect(ctx.destination)
+            if (kind === 'kick') {
+                const osc = ctx.createOscillator()
+                osc.frequency.setValueAtTime(150, time)
+                osc.frequency.exponentialRampToValueAtTime(45, time + 0.12)
+                g.gain.setValueAtTime(1, time)
+                g.gain.exponentialRampToValueAtTime(0.001, time + 0.35)
+                osc.connect(g)
+                osc.start(time)
+                osc.stop(time + 0.4)
+            } else {
+                const s = ctx.createBufferSource()
+                s.buffer = noise
+                const hp = ctx.createBiquadFilter()
+                hp.type = 'highpass'
+                hp.frequency.value = kind === 'snare' ? 1200 : 7000
+                const peak = kind === 'snare' ? 0.6 : 0.18
+                const len = kind === 'snare' ? 0.18 : 0.05
+                g.gain.setValueAtTime(peak, time)
+                g.gain.exponentialRampToValueAtTime(0.001, time + len)
+                s.connect(hp).connect(g)
+                s.start(time)
+                s.stop(time + len + 0.02)
+            }
+        }
+
+        const beat = 60 / bpm
+        for (let i = 0, time = 0.25; time < seconds - 0.4; i++, time += beat) {
+            hit(time, i % 2 === 0 ? 'kick' : 'snare')
+            hit(time, 'hat')
+            hit(time + beat / 2, 'hat')
+            if (i % 4 === 2) hit(time + beat / 2, 'kick') // a little syncopation
+        }
+        return toWav(await ctx.startRendering())
+    }
+
+    function toWav(buffer) {
+        const data = buffer.getChannelData(0)
+        const out = new ArrayBuffer(44 + data.length * 2)
+        const v = new DataView(out)
+        const str = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)) }
+        str(0, 'RIFF'); v.setUint32(4, 36 + data.length * 2, true); str(8, 'WAVE')
+        str(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true)
+        v.setUint32(24, buffer.sampleRate, true); v.setUint32(28, buffer.sampleRate * 2, true)
+        v.setUint16(32, 2, true); v.setUint16(34, 16, true)
+        str(36, 'data'); v.setUint32(40, data.length * 2, true)
+        let peak = 0
+        for (const s of data) peak = Math.max(peak, Math.abs(s))
+        const gain = peak > 0 ? 0.9 / peak : 1
+        for (let i = 0; i < data.length; i++) v.setInt16(44 + i * 2, Math.max(-1, Math.min(1, data[i] * gain)) * 0x7fff, true)
+        return out
+    }
+
+    $('demo').addEventListener('click', async () => {
+        const btn = $('demo')
+        btn.disabled = true
+        for (const [name, bpm] of [['Loop A', 92], ['Loop B', 124], ['Loop C', 146]]) {
+            const wav = await makeLoop(bpm)
+            const tr = {
+                id: nextId++,
+                title: name,
+                artist: t('demoArtist'),
+                cover: null,
+                url: URL.createObjectURL(new Blob([wav], { type: 'audio/wav' })),
+                bpm: null,
+                duration: NaN,
+                state: 'busy',
+                source: wav,
+            }
+            tracks.push(tr)
+            queue.push(tr)
+            render()
+        }
+        btn.disabled = false
+        work()
+    })
+
+    applyTexts()
+</script>
+</body>
+</html>

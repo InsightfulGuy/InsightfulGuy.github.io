@@ -25,13 +25,13 @@ const drawings: Project = {
     layout: "gallery",
 
     concept: {
-        text: ["TODO: What connects these works? Themes, techniques, materials?"],
+        text: ["placholder"],
     },
 
     gallery: [],
 
     reflection: {
-        text: ["TODO: What did you learn from drawing and collaging? How does it feed into your other work?"],
+        text: ["placeholder"],
     },
 }
 

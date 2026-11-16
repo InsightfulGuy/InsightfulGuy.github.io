@@ -27,12 +27,26 @@ export function StatusLabel({ status }: { status: Project["status"] }) {
 
 const SECTIONS = ["concept", "process", "outcome", "reflection"] as const
 
+const isTodo = (text: string) => text.trimStart().startsWith("TODO")
+
 function ProjectSection({ id, section }: { id: (typeof SECTIONS)[number]; section?: Section }) {
-    const { lang, t } = useLang()
+    const { t, tx } = useLang()
     const titleKey = `section_${id}` as const
+    const texts = (section?.text ?? []).map(tx).filter((s) => import.meta.env.DEV || !isTodo(s))
+    const hasMedia = !!section?.media?.length
+
+    if (texts.length === 0 && !hasMedia) return null
+
     return (
         <section className="project-section" aria-labelledby={`sec-${id}`}>
             <h2 id={`sec-${id}`}>{t(titleKey)}</h2>
+            <div className="prose">
+                {texts.map((text, i) => (
+                    <p key={i} className={isTodo(text) ? "todo" : undefined}>
+                        <RichText text={text} />
+                    </p>
+                ))}
+            </div>
             <MediaList items={section?.media} />
         </section>
     )
@@ -74,6 +88,7 @@ export default function ProjectPage({ id }: { id: string }) {
                     {String(index + 1).padStart(2, "0")} · {tx(project.type)}
                 </p>
                 <h1 className="project-title">{tx(project.title)}</h1>
+                <p className="lead">{summary}</p>
                 <dl className="project-meta">
                     {project.year && (
                         <div>
