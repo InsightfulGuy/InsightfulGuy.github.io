@@ -11,7 +11,7 @@ import type { Localized } from "../i18n"
  */
 
 export type Image = {
-    /** Path from the public/ folder, without "public", e.g. "/work/kettlehead/sheet.webp". */
+    /** Path from the public/ folder, without "public", e.g. "/work/mergers&misfits/sheet.webp". */
     src: string
     /** Describe what's in the image (for screen readers). Required. */
     alt: Localized

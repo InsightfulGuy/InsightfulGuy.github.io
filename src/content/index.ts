@@ -1,16 +1,11 @@
 import type { Project } from "./types"
-import kettlehead from "./projects/kettlehead"
+import mergersmisfits from "./projects/mergersmisfits.ts"
 import album from "./projects/album"
 import albumArtwork from "./projects/album-artwork"
 import mediaLibrary from "./projects/media-library"
 import drawings from "./projects/drawings"
 
-/*
- * ORDER OF THE WORK OVERVIEW.
- * To add a project: create a file in src/content/projects/ (copy an existing one),
- * import it above and add it to this list. ZHdK allows at most 12 works.
- */
-const allProjects: Project[] = [kettlehead, album, albumArtwork, drawings, mediaLibrary]
+const allProjects: Project[] = [mergersmisfits, album, albumArtwork, drawings, mediaLibrary]
 
 /** Drafts are only shown while running `npm run dev`. */
 export const projects = allProjects.filter((p) => import.meta.env.DEV || !p.draft)

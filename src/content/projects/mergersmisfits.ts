@@ -1,21 +1,21 @@
 import type { Project } from "../types"
 
-// Media for this project lives in public/work/kettlehead/
-const kettlehead: Project = {
-    id: "kettlehead",
-    title: "Kettlehead",
+// Media for this project lives in public/work/mergersmisfits/
+const mergersmisfits: Project = {
+    id: "Mergers & Misfits",
+    title: "Mergers & Misfits",
     type: { en: "Indie game · 2D top-down fighter", de: "Indie-Game · 2D-Kampfspiel mit Draufsicht" },
     summary: {
-        en: "A knight sets out to save the princess, armed with a frying pan and a Kettle-Helmet.",
-        de: "Ein Ritter zieht los, um die Prinzessin zu retten, bewaffnet mit einer Bratpfanne und einem Kesselhelm",
+        en: "",
+        de: "",
     },
     status: "wip",
     tags: [{ en: "Game dev", de: "Game-Entwicklung" }, "Pixel Art"],
     thumbnail: {
-        src: "/work/kettlehead/concept-sheet.webp",
+        src: "",
         alt: {
-            en: "Kettlehead character spritesheet early concept",
-            de: "Frühes Konzept des Kettlehead-Spritesheets",
+            en: "Mergers & Misfits character spritesheet early concept",
+            de: "Frühes Konzept des Mergers & Misfits-Spritesheets",
         },
         width: 1536,
         height: 1024,
@@ -25,16 +25,16 @@ const kettlehead: Project = {
     concept: {
         text: [
             {
-                en: "A 2D game about a very under-equipped knight. I'm doing the code, the art and the music myself.",
-                de: "Ein 2D-Spiel über einen sehr schlecht ausgerüsteten Ritter. Code, Grafik und Musik mache ich alles selbst.",
+                en: "",
+                de: "",
             },
             {
                 en: "The game is a mix between a 2D top down fighting game and a versus 1v1 fight.",
                 de: "Das Spiel ist eine Mischung aus einem 2D-Kampfspiel mit Draufsicht und einem 1-gegen-1-Kampf.",
             },
             {
-                en: "Kettlehead is about a knight who is clearly not ready for his quest: instead of a sword and armour, he has a frying pan and a kettle on his head.",
-                de: "Kettlehead handelt von einem Ritter, der eindeutig nicht bereit für seine Quest ist: Statt Schwert und Rüstung hat er eine Bratpfanne und einen Kessel auf dem Kopf.",
+                en: "Mergers & Misfits is about a guy who is clearly not ready for",
+                de: "Mergers & Misfits handelt von ",
             },
             {
                 en: "The idea to make this game came from playing games like Hollow Knight, Scott Pilgrim EX and Deltarune. I wanted to make a game that used some mix of Combat mechanics of those games, trying out different ideas and seeing what works. The game is still in development, but I hope to have a playable demo soon.",
@@ -55,13 +55,13 @@ const kettlehead: Project = {
         media: [
             {
                 type: "image",
-                src: "/work/kettlehead/concept-sheet.webp",
-                full: "/work/kettlehead/concept-sheet.png",
+                src: "",
+                full: "",
                 width: 1536,
                 height: 1024,
                 alt: {
-                    en: "Kettlehead character spritesheet early concept",
-                    de: "Frühes Konzept des Kettlehead-Spritesheets",
+                    en: "Mergers & Misfits character spritesheet early concept",
+                    de: "Frühes Konzept des Mergers & Misfits-Spritesheets",
                 },
                 caption: { en: "Character spritesheet", de: "Charakter-Spritesheet" },
             },
@@ -78,8 +78,8 @@ const kettlehead: Project = {
         media: [
             {
                 type: "video",
-                src: "/work/kettlehead/gameplay-test.mp4",
-                poster: "/work/kettlehead/gameplay-poster.webp",
+                src: "",
+                poster: "",
                 width: 1280,
                 height: 720,
                 caption: "Testing gameplay mechanics and physics",
@@ -92,4 +92,4 @@ const kettlehead: Project = {
     },
 }
 
-export default kettlehead
+export default mergersmisfits
