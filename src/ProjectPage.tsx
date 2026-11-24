@@ -25,14 +25,17 @@ export function StatusLabel({ status }: { status: Project["status"] }) {
     return <span className="status">{t("statusWip")}</span>
 }
 
-const SECTIONS = ["concept", "process", "outcome", "reflection"] as const
+type SectionId = "idea" | "process" | "outcome" | "people" | "reflection"
 
 const isTodo = (text: string) => text.trimStart().startsWith("TODO")
 
-function ProjectSection({ id, section }: { id: (typeof SECTIONS)[number]; section?: Section }) {
+function ProjectSection({ id, section }: { id: SectionId; section?: Section }) {
     const { t, tx } = useLang()
     const titleKey = `section_${id}` as const
-    const texts = (section?.text ?? []).map(tx).filter((s) => import.meta.env.DEV || !isTodo(s))
+    const texts = (section?.text ?? [])
+        .map(tx)
+        .filter((s) => s.trim() !== "")
+        .filter((s) => import.meta.env.DEV || !isTodo(s))
     const hasMedia = !!section?.media?.length
 
     if (texts.length === 0 && !hasMedia) return null
@@ -88,7 +91,7 @@ export default function ProjectPage({ id }: { id: string }) {
                     {String(index + 1).padStart(2, "0")} · {tx(project.type)}
                 </p>
                 <h1 className="project-title">{tx(project.title)}</h1>
-                <p className="lead">{summary}</p>
+                {summary && <p className="lead">{summary}</p>}
                 <dl className="project-meta">
                     {project.year && (
                         <div>
@@ -124,18 +127,17 @@ export default function ProjectPage({ id }: { id: string }) {
                 )}
             </header>
 
-            <ProjectSection id="concept" section={project.concept} />
+            <ProjectSection id="idea" section={project.idea} />
 
-            {project.layout === "gallery" && (
+            {project.layout === "gallery" && project.gallery && project.gallery.length > 0 && (
                 <section className="project-section" aria-label={tx(project.title)}>
-                    {project.gallery && project.gallery.length > 0 ? (
-                        <Gallery images={project.gallery} />
-                    ) : null}
+                    <Gallery images={project.gallery} />
                 </section>
             )}
 
             <ProjectSection id="process" section={project.process} />
             <ProjectSection id="outcome" section={project.outcome} />
+            <ProjectSection id="people" section={project.people} />
             <ProjectSection id="reflection" section={project.reflection} />
 
             {projects.length > 1 && (

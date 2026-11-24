@@ -1,5 +1,5 @@
 import type { Project } from "./types"
-import mergersmisfits from "./projects/mergersmisfits.ts"
+import mergersmisfits from "./projects/mergersmisfits"
 import album from "./projects/album"
 import albumArtwork from "./projects/album-artwork"
 import mediaLibrary from "./projects/media-library"

@@ -253,10 +253,10 @@
     border: 4px double var(--ink-line);
     border-radius: 50%;
     flex: none;
-    height: 168px;
+    height: 336px;
     object-fit: cover;
     padding: 5px;
-    width: 168px;
+    width: 336px;
 }
 
 /* ---------- buttons & links ---------- */

@@ -24,14 +24,22 @@ const drawings: Project = {
     draft: true,
     layout: "gallery",
 
-    concept: {
-        text: ["placholder"],
+    idea: {
+        text: [],
     },
 
     gallery: [],
 
+    process: {
+        text: [],
+    },
+
+    people: {
+        text: [],
+    },
+
     reflection: {
-        text: ["placeholder"],
+        text: [],
     },
 }
 

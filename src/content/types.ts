@@ -11,7 +11,7 @@ import type { Localized } from "../i18n"
  */
 
 export type Image = {
-    /** Path from the public/ folder, without "public", e.g. "/work/mergers&misfits/sheet.webp". */
+    /** Path from the public/ folder, without "public", e.g. "/work/mergers-misfits/sheet.webp". */
     src: string
     /** Describe what's in the image (for screen readers). Required. */
     alt: Localized
@@ -25,28 +25,29 @@ export type Image = {
 export type Media =
     | ({ type: "image"; caption?: Localized } & Image)
     | {
-          type: "video"
-          src: string
-          /** Still image shown before the video plays. */
-          poster?: string
-          width?: number
-          height?: number
-          caption?: Localized
-      }
+    type: "video"
+    src: string
+    /** Still image shown before the video plays. */
+    poster?: string
+    width?: number
+    height?: number
+    caption?: Localized
+}
     | { type: "audio"; src: string; caption?: Localized }
     | { type: "youtube"; id: string; title: Localized; caption?: Localized }
     | {
-          /**
-           * Anything playable in a frame: a web export of a game placed in public/,
-           * an itch.io embed URL, a Figma prototype embed, ...
-           */
-          type: "embed"
-          src: string
-          title: Localized
-          /** CSS aspect ratio, e.g. "16 / 9" (default) or "4 / 3". */
-          aspectRatio?: string
-          caption?: Localized
-      }
+    /**
+     * Anything playable in a frame: a web export of a game placed in public/,
+     * an itch.io embed URL, a Figma prototype embed, ...
+     * For files in public/, use the full path ending in index.html.
+     */
+    type: "embed"
+    src: string
+    title: Localized
+    /** CSS aspect ratio, e.g. "16 / 9" (default) or "4 / 3". */
+    aspectRatio?: string
+    caption?: Localized
+}
 
 export type Section = {
     /** Paragraphs. */
@@ -67,7 +68,7 @@ export type Project = {
     title: Localized
     /** Short label, e.g. "2D game" or "Music". */
     type: Localized
-    /** One or two sentences, shown on the overview card and at the top of the page. */
+    /** One or two sentences, shown at the top of the page. */
     summary: Localized
     year?: string
     /** What you did, e.g. "Concept, code, art and music". */
@@ -78,10 +79,11 @@ export type Project = {
     thumbnail?: Image
     links?: ProjectLink[]
 
-    /** All four sections are optional. Empty ones are not shown. */
-    concept?: Section
+    /** All sections are optional. Empty ones are not shown. */
+    idea?: Section
     process?: Section
     outcome?: Section
+    people?: Section
     reflection?: Section
 
     /** "gallery" adds an image grid with an enlarged view (for drawings, collages, ...). */

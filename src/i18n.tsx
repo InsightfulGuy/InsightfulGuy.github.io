@@ -31,10 +31,10 @@ const en = {
         "I do programming tasks/study during the week and games + music in my free time. Currently doing my apprenticeship at [Worldline Schweiz AG](https://worldline.com/en-ch/home) and my Berufsschule at [TBZ](https://tbz.ch/).",
     heroDesignIntro:
         "I’m Tristan, an application developer in training. Outside of work I make pixel-art games, record music and draw in a messy zine/collage style. What interests me most is the moment where code, image and sound meet the person using them.",
-    viewWork: "View work",
+    viewWork: "View personal projects",
     avatarAlt: "Profile picture: cartoon character with round glasses and a dark T-shirt",
 
-    workTitle: "Work",
+    workTitle: "Personal Projects",
     statusWip: "Work in progress",
     draft: "Draft · not on live site",
 
@@ -45,9 +45,10 @@ const en = {
     notFound: "Project not found",
     year: "Year",
     role: "Role",
-    section_concept: "Concept",
+    section_idea: "Idea",
     section_process: "Process",
     section_outcome: "Outcome",
+    section_people: "People",
     section_reflection: "Reflection",
     fullRes: "Full resolution ↗",
     openImage: "Open image",
@@ -58,7 +59,7 @@ const en = {
     aboutText:
         "I like building things that line up with my interests. At work that's web apps and backend code; at home it's Indie Games, recording songs and whatever media I'm into at the moment :)",
     skillsTitle: "Skills",
-    githubLink: "More code on GitHub ↗",
+    githubLink: "More code and programming portfolio on GitHub ↗",
 
     close: "Close",
     video: "Video",
@@ -100,9 +101,10 @@ const de: Dict = {
     notFound: "Projekt nicht gefunden",
     year: "Jahr",
     role: "Rolle",
-    section_concept: "Konzept",
+    section_idea: "Idee",
     section_process: "Prozess",
     section_outcome: "Ergebnis",
+    section_people: "Menschen",
     section_reflection: "Reflexion",
     fullRes: "Volle Auflösung ↗",
     openImage: "Bild öffnen",

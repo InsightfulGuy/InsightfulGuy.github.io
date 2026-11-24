@@ -6,6 +6,7 @@ dist/
 
 # local-only files, kept out of the public repo
 archive/
+TODO.md
 
 # IDE / editor
 .idea/

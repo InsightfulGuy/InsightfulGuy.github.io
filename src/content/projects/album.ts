@@ -13,27 +13,34 @@ const album: Project = {
     tags: [{ en: "Music production", de: "Musikproduktion" }, "Rock"],
     links: [],
 
-    concept: {
+    idea: {
         text: [
             {
-                en: "The album lyrics are being written with the help of a Google Form, where I asked/posted an anonymous forum for people to share their worries and struggles. I am currently using these lyrics as guideline for the songs.",
-                de: "Die Songtexte für das Album entstehen mithilfe eines Google-Formulars, in dem ich in einem anonymen Forum darum gebeten habe, dass die Teilnehmer ihre Sorgen und Probleme mitteilen. Diese Texte diene mir derzeit als Grundlage für die Songs."
+                en: "An album about the worries and struggles of people my age, based on what they told me.",
+                de: "Ein Album über die Sorgen und Probleme von Leuten in meinem Alter, basierend auf dem, was sie mir erzählt haben.",
             },
         ],
     },
 
     process: {
-        text: [
-            "",
-        ],
+        text: [],
     },
 
     outcome: {
-        text: ["Placeholder for results"],
+        text: [],
+    },
+
+    people: {
+        text: [
+            {
+                en: "The lyrics come from other people: I shared an anonymous Google Form in an online forum, where people could write about their worries and struggles. I'm using their answers as the guideline for the songs.",
+                de: "Die Songtexte kommen von anderen Menschen: Ich habe ein anonymes Google-Formular in einem Online-Forum geteilt, in dem die Leute über ihre Sorgen und Probleme schreiben konnten. Ihre Antworten dienen mir als Grundlage für die Songs.",
+            },
+        ],
     },
 
     reflection: {
-        text: [""],
+        text: [],
     },
 }
 

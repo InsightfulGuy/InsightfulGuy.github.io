@@ -166,7 +166,6 @@
             text-align: right;
         }
         .unit { color: var(--muted); display: block; font-size: 10px; text-align: right; }
-        .fix button:hover { border-color: var(--ink-line); color: var(--text); }
         .busy { color: var(--muted); font-size: 12px; font-style: italic; }
         .err { color: var(--red); font-size: 12px; }
 
@@ -263,11 +262,10 @@
             privacy: 'Nothing gets uploaded. Your files stay on your device, everything runs in the browser.',
             busy: 'finding the beat…',
             error: "couldn't read this file",
+            noBeat: 'no clear beat',
             songs: (n) => `${n} ${n === 1 ? 'song' : 'songs'}`,
             play: 'Play',
             pause: 'Pause',
-            half: 'Half tempo',
-            double: 'Double tempo',
             unknown: 'Unknown artist',
             demoArtist: 'Demo drum loop, generated in your browser',
             done: (t, bpm) => `${t}: ${bpm} BPM`,
@@ -286,11 +284,10 @@
             privacy: 'Nichts wird hochgeladen. Deine Dateien bleiben auf deinem Gerät, alles läuft im Browser.',
             busy: 'suche den Beat…',
             error: 'Datei konnte nicht gelesen werden',
+            noBeat: 'kein klarer Beat',
             songs: (n) => `${n} ${n === 1 ? 'Song' : 'Songs'}`,
             play: 'Abspielen',
             pause: 'Pause',
-            half: 'Halbes Tempo',
-            double: 'Doppeltes Tempo',
             unknown: 'Unbekannt',
             demoArtist: 'Demo-Drumloop, im Browser generiert',
             done: (t, bpm) => `${t}: ${bpm} BPM`,
@@ -366,6 +363,7 @@
         let bpmBox
         if (tr.state === 'busy') bpmBox = el('span', { class: 'busy' }, t('busy'))
         else if (tr.state === 'error') bpmBox = el('span', { class: 'err' }, t('error'))
+        else if (tr.bpm == null) bpmBox = el('span', { class: 'busy' }, t('noBeat'))
         else {
             bpmBox = el('div', { class: 'bpm' },
                 el('div', {}, el('span', { class: 'num' }, String(Math.round(tr.bpm))), el('span', { class: 'unit label' }, 'BPM')),
@@ -391,14 +389,6 @@
             el('span', { class: 'dur' }, fmtTime(tr.duration)),
             play,
         )
-    }
-
-    /** Detection sometimes lands on half or double the real tempo; let people fix it by ear. */
-    function fixTempo(tr, factor) {
-        const next = tr.bpm * factor
-        if (next < 30 || next > 400) return
-        tr.bpm = next
-        render()
     }
 
     function togglePlay(tr) {
@@ -465,7 +455,7 @@
                 await nextFrame()
                 const result = await detectBpm(buf)
                 Object.assign(tr, result, { state: 'done' })
-                $('status').textContent = t('done')(tr.title, Math.round(tr.bpm))
+                $('status').textContent = tr.bpm == null ? `${tr.title}: ${t('noBeat')}` : t('done')(tr.title, Math.round(tr.bpm))
             } catch (e) {
                 console.warn(e)
                 tr.state = 'error'
@@ -570,16 +560,16 @@
     }
 
     /* ------------------------------------------------------------------ */
-    /* BPM detection — same idea as the Python version (librosa):         */
-    /* 1 load → 2 find the hits → 3 guess the tempo → 4 place the beats   */
-    /* → 5 exact BPM from a straight line through the beat times          */
+    /* BPM detection:                                                     */
+    /* 1 load → 2 find the hits → 3 rough tempo guess                     */
+    /* → 4 fine-tune with the "tempo wheel" (where do the hits stack up?) */
     /* ------------------------------------------------------------------ */
 
     const SR = 11025 // low sample rate is plenty for finding drum hits
     const FFT = 1024 // ~93 ms window
     const HOP = 128 // ~11.6 ms between frames
     const FPS = SR / HOP
-    const MAX_SECONDS = 120
+    const MAX_SECONDS = 600 // up to 10 minutes; songs often speed up, so use the whole thing
 
     async function detectBpm(arrayBuffer) {
         // 1. Load: decode, mix to mono and resample in one go
@@ -597,27 +587,40 @@
         const onset = onsetEnvelope(x)
         await nextFrame()
 
-        // 3. Guess the tempo: at which gap do the hits repeat?
-        const period = estimatePeriod(onset) // in frames, with decimals
+        // Silence or a few lone sounds have no tempo, so don't invent one
+        let loudest = 0
+        for (const v of x) if (Math.abs(v) > loudest) loudest = Math.abs(v)
+        if (loudest < 0.001 || countHits(onset) < 4) return { bpm: null, firstBeat: 0, duration: decoded.duration }
 
-        // 4. Place the beats on the hits that fit that tempo
-        const beats = trackBeats(onset, period)
+        // 3. Rough guess: at which gap do the hits repeat?
+        const guess = estimatePeriod(onset) // in frames
 
-        // 5. Exact BPM: straight line through all beat times
-        let framesPerBeat = period
-        if (beats.length >= 4) framesPerBeat = slope(beats)
+        // 4. Fine-tune: wrap the song around a circle (one lap = one beat) for tempos
+        //    close to the guess, and keep the one where the hits stack up best.
+        let tuned = fineTune(onset, guess)
+
+        // Fast songs can lock onto half their tempo. If kick and snare also land on the
+        // off-beats, those are real beats and the song is twice as fast. Only the low
+        // frequencies count here, because hi-hats on the off-beats don't change the tempo.
+        if ((60 * FPS) / tuned.period <= 110) {
+            const low = onsetEnvelope(x, 2000)
+            await nextFrame()
+            if (offbeatRatio(low, tuned.parts) > 0.8) tuned = fineTune(onset, guess / 2)
+        }
+        const { period, firstBeat } = tuned
         const toSeconds = (f) => (f * HOP + FFT / 2) / SR
 
         return {
-            bpm: (60 * FPS) / framesPerBeat,
-            firstBeat: beats.length ? toSeconds(beats[0]) : 0,
+            bpm: (60 * FPS) / period,
+            firstBeat: toSeconds(firstBeat),
             duration: decoded.duration,
         }
     }
 
-    function onsetEnvelope(x) {
+    function onsetEnvelope(x, maxHz = SR / 2) {
         const frames = Math.max(1, Math.floor((x.length - FFT) / HOP) + 1)
         const half = FFT / 2
+        const top = Math.min(half, Math.round((maxHz * FFT) / SR))
         const win = new Float32Array(FFT)
         for (let i = 0; i < FFT; i++) win[i] = 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / FFT)
         const re = new Float64Array(FFT)
@@ -631,7 +634,7 @@
             for (let i = 0; i < FFT; i++) { re[i] = x[o + i] * win[i]; im[i] = 0 }
             fft(re, im)
             let sum = 0
-            for (let k = 1; k < half; k++) {
+            for (let k = 1; k < top; k++) {
                 const mag = Math.log1p(100 * Math.hypot(re[k], im[k])) // log = closer to how we hear
                 const diff = mag - prev[k]
                 if (diff > 0) sum += diff // only count things getting louder
@@ -675,64 +678,108 @@
             ac[lag] = s / (n - lag)
         }
         const at = (x) => { const i = Math.floor(x), f = x - i; return (ac[i] || 0) * (1 - f) + (ac[i + 1] || 0) * f }
-        // Score each gap: its own repeat + the double gap (the bar) + the half gap (8th notes).
+        // Score each gap: its own repeat + a bit of the double gap + the half gap (8th notes).
         // Checking the half gap stops it from locking onto 3:2 rhythms (146 → 97).
-        // Then lean a bit towards ~120 BPM, where most songs are.
+        // Then lean a bit towards ~130 BPM, the middle of most rock / pop songs.
         const score = new Float64Array(maxLag + 2)
         let best = minLag
         for (let lag = minLag; lag <= maxLag; lag++) {
             const bpm = (60 * FPS) / lag
-            const prior = Math.exp(-0.5 * Math.log2(bpm / 120) ** 2)
-            score[lag] = (at(lag) + 0.5 * at(2 * lag) + 0.5 * at(lag / 2)) * prior
+            const prior = Math.exp(-0.5 * Math.log2(bpm / 130) ** 2)
+            score[lag] = (at(lag) + 0.25 * at(2 * lag) + 0.5 * at(lag / 2)) * prior
             if (score[lag] > score[best]) best = lag
         }
         return best + peakOffset(score[best - 1], score[best], score[best + 1])
     }
 
-    function trackBeats(o, period) {
-        const n = o.length
-        // where does the beat grid line up best with the hits?
-        let bestPhase = 0
-        let bestSum = -1
-        for (let phase = 0; phase < period; phase++) {
-            let s = 0
-            for (let f = phase; f < n; f += period) s += o[Math.round(f)] || 0
-            if (s > bestSum) { bestSum = s; bestPhase = phase }
-        }
-        // walk along the song, snapping each beat to the strongest hit nearby
-        const beats = []
-        const reach = Math.max(2, Math.round(period * 0.12))
-        let expected = bestPhase
-        while (expected < n - 1) {
-            const c = Math.round(expected)
-            let j = c
-            for (let k = Math.max(1, c - reach); k <= Math.min(n - 2, c + reach); k++) if (o[k] > o[j]) j = k
-            if (o[j] > 0.5) {
-                const exact = j + peakOffset(o[j - 1], o[j], o[j + 1])
-                beats.push(exact)
-                expected = exact + period
-            } else {
-                expected += period // quiet bit, keep going on the grid
+    /**
+     * The "tempo wheel": for a test tempo, give every frame an angle (one lap = one beat).
+     * If the tempo is right, the hits all land at the same angle and add up;
+     * if it's a bit off, they spread around the circle and cancel out.
+     *
+     * Real drummers speed up and slow down, so this runs on ~20 s chunks.
+     * Each chunk gets its own exact tempo, chunks that clearly disagree
+     * (an intro without drums, a break) are dropped, the rest are averaged.
+     */
+    function fineTune(o, guess) {
+        const chunk = Math.round(FPS * 20)
+        const chunks = []
+        for (let a = 0; a < o.length; a += chunk) chunks.push([a, Math.min(o.length, a + chunk)])
+        if (chunks.length > 1 && chunks[chunks.length - 1][1] - chunks[chunks.length - 1][0] < chunk / 2) chunks.pop()
+
+        const wheel = (a, b, period) => {
+            const w = (2 * Math.PI) / period
+            let re = 0
+            let im = 0
+            for (let n = a; n < b; n++) {
+                const v = o[n]
+                if (v === 0) continue
+                re += v * Math.cos(w * n)
+                im += v * Math.sin(w * n)
             }
+            return { score: re * re + im * im, angle: Math.atan2(im, re) }
         }
-        return beats
+
+        // try tempos within ±6 % of the rough guess, in 0.05 BPM steps
+        const bpm0 = (60 * FPS) / guess
+        const tries = []
+        for (let bpm = bpm0 * 0.94; bpm <= bpm0 * 1.06; bpm += 0.05) tries.push(bpm)
+
+        const results = chunks.map(([a, b]) => {
+            const scores = tries.map((bpm) => wheel(a, b, (60 * FPS) / bpm).score)
+            let best = 0
+            for (let i = 1; i < scores.length; i++) if (scores[i] > scores[best]) best = i
+            const bpm = tries[best] + 0.05 * peakOffset(scores[best - 1], scores[best], scores[best + 1])
+            return { a, b, bpm, ...wheel(a, b, (60 * FPS) / bpm) }
+        })
+
+        // average the chunks that agree with the majority (within 3 %)
+        const sorted = results.map((r) => r.bpm).sort((x, y) => x - y)
+        const median = sorted[Math.floor(sorted.length / 2)]
+        const agree = results.filter((r) => Math.abs(r.bpm - median) / median < 0.03)
+        const bpm = agree.reduce((s, r) => s + r.bpm, 0) / agree.length
+        const period = (60 * FPS) / bpm
+
+        // first beat: line the grid up with the first chunk, then take the first grid spot with a hit
+        const c0 = results[0]
+        const p0 = (60 * FPS) / c0.bpm
+        let f = ((c0.angle / (2 * Math.PI)) * p0) % p0
+        if (f < 0) f += p0
+        while (f < o.length && Math.max(o[Math.round(f) - 1] || 0, o[Math.round(f)] || 0, o[Math.round(f) + 1] || 0) < 1) f += p0
+        const parts = results.map((r) => ({ a: r.a, b: r.b, period: (60 * FPS) / r.bpm }))
+        return { period, firstBeat: f < o.length ? f : 0, parts }
     }
 
-    /** Slope of a straight line through (0, b0), (1, b1), … = frames per beat. */
-    function slope(beats) {
-        // use the beat number from the grid, so skipped quiet beats don't break the line
-        const first = beats[0]
-        const step = (beats[beats.length - 1] - first) / (beats.length - 1)
-        const idx = beats.map((b) => Math.round((b - first) / step))
-        const xm = idx.reduce((a, v) => a + v, 0) / idx.length
-        const ym = beats.reduce((a, v) => a + v, 0) / beats.length
-        let num = 0
-        let den = 0
-        for (let i = 0; i < beats.length; i++) {
-            num += (idx[i] - xm) * (beats[i] - ym)
-            den += (idx[i] - xm) ** 2
+    /** How many separate hits stand out from the rest of the track. */
+    function countHits(o) {
+        let hits = 0
+        let ready = true
+        for (const v of o) {
+            if (ready && v >= 2) { hits++; ready = false }
+            else if (v < 0.5) ready = true
         }
-        return den ? num / den : step
+        return hits
+    }
+
+    /** How hard the off-beats hit compared to the beats (median over the song's chunks). */
+    function offbeatRatio(o, parts) {
+        const near = (f) => Math.max(o[Math.round(f) - 1] || 0, o[Math.round(f)] || 0, o[Math.round(f) + 1] || 0)
+        const ratios = parts.map(({ a, b, period }) => {
+            const sumAt = (phase) => {
+                let s = 0
+                for (let f = a + phase; f < b; f += period) s += near(f)
+                return s
+            }
+            let bestPhase = 0
+            let bestSum = -1
+            for (let phase = 0; phase < period; phase++) {
+                const s = sumAt(phase)
+                if (s > bestSum) { bestSum = s; bestPhase = phase }
+            }
+            return bestSum > 0 ? sumAt((bestPhase + period / 2) % period) / bestSum : 0
+        })
+        ratios.sort((x, y) => x - y)
+        return ratios[Math.floor(ratios.length / 2)]
     }
 
     /** Sub-frame position of a peak from its two neighbours (parabola). */
@@ -784,7 +831,9 @@
     }
 
     /* ------------------------------------------------------------------ */
-    /* Demo loops: drum patterns generated right here, so anyone can try quickly */
+    /* Demo loops: drum patterns generated right here, so anyone can try  */
+    /* it without their own files.                                        */
+    /* ------------------------------------------------------------------ */
 
     async function makeLoop(bpm, seconds = 16) {
         const rate = 44100

@@ -1,6 +1,7 @@
 import type { Project } from "../types"
 
 // Media for this project goes in public/work/album-artwork/
+// Hidden on the live site (draft) until it passes the quick test. Remove `draft: true` when it does.
 const albumArtwork: Project = {
     id: "album-artwork",
     title: { en: "Album artwork", de: "Album-Artwork" },
@@ -12,13 +13,10 @@ const albumArtwork: Project = {
     status: "wip",
     tags: ["Design", "Video"],
     links: [],
+    draft: true,
 
-    concept: {
+    idea: {
         text: [
-            {
-                en: "When the Album is finished, I might also wan't to make cover art, to improve my designing skills.",
-                de: "Wenn das Album fertig ist, kann es sein dass ich noch ein Cover-Art für es mache, um meine Design-Skills zu verbessern.",
-            },
             {
                 en: "It uses the same zine/collage style as my drawings, so the music and the visuals feel like one project.",
                 de: "Es nutzt denselben Zine- und Collage-Stil wie meine Zeichnungen, damit Musik und Visuals wie ein gemeinsames Projekt wirken.",
@@ -27,17 +25,19 @@ const albumArtwork: Project = {
     },
 
     process: {
-        text: [
-            "sketches, moodboards, drafts and storyboards for the music video",
-        ],
+        text: [],
     },
 
     outcome: {
-        text: ["Cover art still TBD"],
+        text: [],
+    },
+
+    people: {
+        text: [],
     },
 
     reflection: {
-        text: [""],
+        text: [],
     },
 }
 
