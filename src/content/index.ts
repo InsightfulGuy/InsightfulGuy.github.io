@@ -4,8 +4,9 @@ import album from "./projects/album"
 import albumArtwork from "./projects/album-artwork"
 import mediaLibrary from "./projects/media-library"
 import drawings from "./projects/drawings"
+import zuriTonight from "./projects/zuri-tonight"
 
-const allProjects: Project[] = [mergersmisfits, album, albumArtwork, drawings, mediaLibrary]
+const allProjects: Project[] = [mergersmisfits, zuriTonight, album, albumArtwork, drawings, mediaLibrary]
 
 /** Drafts are only shown while running `npm run dev`. */
 export const projects = allProjects.filter((p) => import.meta.env.DEV || !p.draft)

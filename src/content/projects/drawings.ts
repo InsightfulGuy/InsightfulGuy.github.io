@@ -11,7 +11,6 @@ import type { Project } from "../types"
  *          caption: { en: "Collage, 2025", de: "Collage, 2025" },
  *      },
  * 3. Pick one image as `thumbnail` for the overview card.
- * 4. Remove `draft: true` so it appears on the live site.
  */
 const drawings: Project = {
     id: "drawings",
@@ -21,7 +20,6 @@ const drawings: Project = {
         en: "Doodles, collages and zine pages: the things I make without a plan. This is where my visual style comes from.",
         de: "Doodles, Collagen und Zine-Seiten: die Dinge, die ich ohne Plan mache. Hier entsteht mein visueller Stil.",
     },
-    draft: true,
     layout: "gallery",
 
     idea: {

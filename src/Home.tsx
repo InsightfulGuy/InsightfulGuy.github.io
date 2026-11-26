@@ -89,13 +89,6 @@ export default function Home({ anchor }: { anchor?: string }) {
                         </a>
                     </div>
                 </div>
-                <img
-                    className="avatar"
-                    src="/pfp.png"
-                    alt={t("avatarAlt")}
-                    width="160"
-                    height="160"
-                />
             </section>
 
             <section className="section container" id="work" aria-labelledby="work-title">

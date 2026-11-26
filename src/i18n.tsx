@@ -32,7 +32,6 @@ const en = {
     heroDesignIntro:
         "I’m Tristan, an application developer in training. Outside of work I make pixel-art games, record music and draw in a messy zine/collage style. What interests me most is the moment where code, image and sound meet the person using them.",
     viewWork: "View personal projects",
-    avatarAlt: "pfp",
 
     workTitle: "Personal Projects",
     statusWip: "Work in progress",
@@ -88,7 +87,6 @@ const de: Dict = {
     heroDesignIntro:
         "Ich bin Tristan, angehender Applikationsentwickler. Neben der Arbeit mache ich Pixel-Art-Games, nehme Musik auf und zeichne im Zine- und Collage-Stil. Am meisten interessiert mich der Moment, in dem Code, Bild und Ton auf die Person treffen, die sie benutzt.",
     viewWork: "Arbeiten ansehen",
-    avatarAlt: "pfp",
 
     workTitle: "Arbeiten",
     statusWip: "In Arbeit",

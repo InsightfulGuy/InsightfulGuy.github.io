@@ -247,18 +247,6 @@
     margin-top: 30px;
 }
 
-/* badge / patch: double ring */
-.avatar {
-    background: var(--paper);
-    border: 4px double var(--ink-line);
-    border-radius: 50%;
-    flex: none;
-    height: 336px;
-    object-fit: cover;
-    padding: 5px;
-    width: 336px;
-}
-
 /* ---------- buttons & links ---------- */
 
 .btn {
@@ -906,17 +894,6 @@ body:has(.lightbox[open]) {
         padding-inline: 16px;
     }
 
-    .hero {
-        align-items: flex-start;
-        flex-direction: column-reverse;
-        gap: 24px;
-    }
-
-    .avatar {
-        height: 96px;
-        padding: 3px;
-        width: 96px;
-    }
 
     /* Tiles without a thumbnail don't need a full-height image area on phones. */
     .work-thumb:has(.work-thumb-empty) {

@@ -1,7 +1,6 @@
 import type { Project } from "../types"
 
 // Media for this project goes in public/work/album-artwork/
-// Hidden on the live site (draft) until it passes the quick test. Remove `draft: true` when it does.
 const albumArtwork: Project = {
     id: "album-artwork",
     title: { en: "Album artwork", de: "Album-Artwork" },
@@ -13,7 +12,6 @@ const albumArtwork: Project = {
     status: "wip",
     tags: ["Design", "Video"],
     links: [],
-    draft: true,
 
     idea: {
         text: [

@@ -67,7 +67,7 @@ export function MediaItem({ item }: { item: Media }) {
                     src={item.src}
                     title={tx(item.title)}
                     style={{ aspectRatio: item.aspectRatio ?? "16 / 9" }}
-                    allow="autoplay; fullscreen; gamepad"
+                    allow="autoplay; fullscreen; gamepad; geolocation"
                     allowFullScreen
                     loading="lazy"
                 />
