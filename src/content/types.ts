@@ -1,15 +1,5 @@
 import type { Localized } from "../i18n"
 
-/*
- * Shapes of the project data. You normally don't need to edit this file,
- * only the files in src/content/projects/.
- *
- * Localized = a plain string (same in EN and DE) or { en: "...", de: "..." }.
- * Text can contain links: "Made with [Godot](https://godotengine.org)".
- *
- * you run `npm run dev`, and hidden on the live site. A section that only has
- */
-
 export type Image = {
     /** Path from the public/ folder, without "public", e.g. "/work/mergers-misfits/sheet.webp". */
     src: string
